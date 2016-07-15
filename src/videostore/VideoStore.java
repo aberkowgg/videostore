@@ -103,17 +103,15 @@ public class VideoStore {
                 case "2":
                     System.out.println("Please enter the title and id of video you wish to delete.");
                     System.out.println("Title: ");
-                    String video_title_d = KBinput.nextLine();//System.out.println(video_title);
-//                    System.out.println("Id: ");
-//                    String video_id_d = KBinput.nextLine();//System.out.println(video_id);
-                    //Video vDelete = new Video(video_title_d, video_id_d);
-                    D.p("before delete:");
-                    videoStore.printInStoreVideos();
+                    String video_title_d = KBinput.nextLine();
+                    Video vDelete = new Video(video_title_d);
+//                    D.p("before delete:");
+//                    videoStore.printInStoreVideos();
                     
-                    videoStore.removeVideoInStore(video_title_d);
+                    videoStore.removeVideoInStore(vDelete);
                     
-                    D.p("after delete:");
-                    videoStore.printInStoreVideos();
+//                    D.p("after delete:");
+//                    videoStore.printInStoreVideos();
                     break;
                 case "3":
                     System.out.println("Please enter customer name");
@@ -128,53 +126,101 @@ public class VideoStore {
                     break;
                 case "4":
                     System.out.println("Please enter the name and id of the customer you wish to delete.");
-                    System.out.println("Title: ");
+                    System.out.println("Name: ");
                     String customer_name_d = KBinput.nextLine();//System.out.println(video_title);
                     System.out.println("Id: ");
                     String custome_id_d = KBinput.nextLine();//System.out.println(video_id);
                     Customer cDelete = new Customer(customer_name_d, custome_id_d);
-                    D.p("before delete:");
-                    videoStore.printInStoreCustomers();
+//                    D.p("before delete:");
+//                    videoStore.printInStoreCustomers();
                     
                     videoStore.removeCustomerInStore(cDelete);
                     
-                    D.p("after delete:");
-                    videoStore.printInStoreCustomers();
+//                    D.p("after delete:");
+//                    videoStore.printInStoreCustomers();
                     break;
                 case "5":
-                    Customer d = new Customer("Owen", "9");
+                    videoStore.printInStoreVideos();
+                    System.out.println("Please enter the title and id of video");
+                    System.out.println("Title: ");
+                    String video_search_title = KBinput.nextLine();
+                    Video searchVideo = new Video(video_search_title);
+                    boolean video_exists = videoStore.contains(searchVideo);
+                    D.p(Boolean.toString(video_exists));
                     
-                    D.p("before delete:");
-                    videoStore.printInStoreCustomers();
-                    
-                    videoStore.removeCustomerInStore(d);
-                    
-                    D.p("after delete:");
-                    videoStore.printInStoreCustomers();
                     break;
                 case "6":
+                    System.out.println("Please enter the name and id of the customer you wish to delete.");
+                    System.out.println("Name: ");
+                    String customer_name_co = KBinput.nextLine();//System.out.println(video_title);
+                    System.out.println("Id: ");
+                    String custome_id_co = KBinput.nextLine();//System.out.println(video_id);
+                    Customer cCheckout = new Customer(customer_name_co, custome_id_co);
                     
+                    System.out.println("Please enter the title of the video you wish to checkout.");
+                    System.out.println("Title: ");
+                    String video_title_co = KBinput.nextLine();
+                    Video vCheckOut = new Video(video_title_co);
+                    
+                    D.p("before checkout: ");
+                    videoStore.printInStoreCustomers();videoStore.printInStoreVideos();
+                    
+                    boolean checked_out_successfully = videoStore.checkout(cCheckout, vCheckOut);
+                    D.p(Boolean.toString(checked_out_successfully));
+                    
+                    D.p("after checkout: ");
+                    videoStore.printInStoreCustomers();videoStore.printInStoreVideos();
                     break;
                 case "7":
+                    System.out.println("Please enter the name and id of the customer you wish checkin.");
+                    System.out.println("Name: ");
+                    String customer_name_ci = KBinput.nextLine();//System.out.println(video_title);
+                    System.out.println("Id: ");
+                    String custome_id_ci = KBinput.nextLine();//System.out.println(video_id);
+                    Customer cCheckin = new Customer(customer_name_ci, custome_id_ci);
+                    
+                    System.out.println("Please enter the title of the video you wish to checkin.");
+                    System.out.println("Title: ");
+                    String video_title_ci = KBinput.nextLine();
+                    Video vCheckIn = new Video(video_title_ci);
+                    
+                    D.p("before checkin: ");
+                    videoStore.printInStoreCustomers();videoStore.printInStoreVideos();
+                    
+                    boolean checked_in_successfully = videoStore.checkin(cCheckin, vCheckIn);
+                    D.p(Boolean.toString(checked_in_successfully));
+                    
+                    D.p("after checkin: ");
+                    videoStore.printInStoreCustomers();videoStore.printInStoreVideos();
                     
                     break;
                 case "8":
-                    
+                    videoStore.printInStoreCustomers();
                     break;
                 case "9":
-                    
+                    //NTBD
+                    videoStore.printAllVideos();
                     break;
                 case "10":
-                    
+                    videoStore.printInStoreVideos();
                     break;
                 case "11":
-                    
+                    D.p("needs to be done");
                     break;
                 case "12":
+                    System.out.println("Please enter the name and id of the customer you wish to see current checkedout vidoes.");
+                    System.out.println("Name: ");
+                    String customer_name_vids = KBinput.nextLine();//System.out.println(video_title);
+                    System.out.println("Id: ");
+                    String custome_id_vids = KBinput.nextLine();//System.out.println(video_id);
+                    Customer cVideosCheckedOut = new Customer(customer_name_vids, custome_id_vids);
+                    
+                    videoStore.printCustomersVideos(cVideosCheckedOut);
                     
                     break;
                 case "13":
-                    
+                    D.p("Goodbye.");
+                    again = "X";
                     break;
                 
                 

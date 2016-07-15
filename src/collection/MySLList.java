@@ -41,48 +41,35 @@ public class MySLList {
     public void clear() {
         head = null;
     }
-
-    /**
-     * Checks if the list contains an Object. Starts at head and moves to next each call
-     * 
-     * @param n the SLListNode you start check
-     * @param element the Object you wish to see if the linked list contains
-     * @return 
-     */
-    public boolean contains(SLListNode n, Object element) {
-        if (n.data == element) {
+    
+    public boolean contains(Object element){
+        SLListNode ref = head;
+        if(ref.getElement().equals(element)){
             return true;
         }
-        if (n == null) {
-            return false;
-        } else {
-            return contains(n.next, element);
+        while(ref.next != null && !ref.next.data.equals(element)){
+            ref = ref.next;
         }
+        if(ref.next == null){
+            return false;
+        }
+        return true;
     }
-    /**
-     * Removes object from list
-     * 
-     * @param element Object you wish to remove from list
-     * @return Object removed, returns null if does not exist.
-     */
-    public Object remove(String title){
+    
+    public Object get(Object element){
         SLListNode ref = head;
-        System.out.println(head.getElement().toString());
-        if(Objects.equals(head.getElement().toString(), title)){
+        if(ref.getElement().equals(element)){
             Object temp = head.data;
-            head = head.next;
             return temp;
         }
-        while(ref.next != null && !Objects.equals(head.getElement().toString(), title)){
+        while(ref.next != null && !ref.next.data.equals(element)){
             ref = ref.next;
         }
         if(ref.next == null){
             return null;
         }
         Object rem = ref.next.data;
-        ref.next = ref.next.next;
         return rem;
-           //return ref;
     }
     
     /**
@@ -93,15 +80,12 @@ public class MySLList {
      */
     public Object remove(Object element){
         SLListNode ref = head;
-        System.out.println(head.getElement().toString());
-        System.out.println(element.toString());
-        if(Objects.equals(head.getElement().toString(), element.toString())){
+        if(ref.getElement().equals(element)){
             Object temp = head.data;
             head = head.next;
             return temp;
         }
-        while(ref.next != null && !Objects.equals(ref.getElement().toString(), element.toString())){
-            System.out.println(ref.getElement().toString());
+        while(ref.next != null && !ref.next.data.equals(element)){
             ref = ref.next;
         }
         if(ref.next == null){

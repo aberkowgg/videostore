@@ -20,6 +20,10 @@ public class Video {
         this.id = id;
     }
     
+    public Video(String title){
+        this.title = title;
+    }
+    
     public String getTitle(){
         return title;
     }
@@ -38,8 +42,20 @@ public class Video {
         return title;
     }
     
-    public boolean isEqualTo(String title){
-        return (Objects.equals(this.title, title));
-        //&& title.equals(videoB.getTitle())
+    @Override
+    public boolean equals(Object other){
+        //check if same type of object
+        if (!(other instanceof Video)) {
+            return false;
+        }
+        Video that = (Video) other;//create Video from Object
+        return title.equals(that.getTitle());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 31 * hash + Objects.hashCode(this.title);
+        return hash;
     }
 }

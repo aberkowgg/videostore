@@ -5,6 +5,7 @@
  */
 package models;
 
+import collection.MySLList;
 import java.util.Objects;
 
 /**
@@ -13,7 +14,8 @@ import java.util.Objects;
  */
 public class Customer {
     private String name;
-    private String id;
+    public String id;
+    public MySLList rentVideos = new MySLList();
     
     public Customer(String name, String id){
         this.name = name;
@@ -28,27 +30,31 @@ public class Customer {
         return id;
     }
     
-//    @Override
-//    public String toString(){
-//        return "Id: " + id + " , Title: " + title;
-//    }
+    public void rentVideo(Video video){
+        System.out.println("REnting : " + video.toString());
+        rentVideos.insert(video);
+    }
+    
+    public Video checkInVideo(Video video){
+        return (Video) rentVideos.remove(video);
+    }
+    
+    public MySLList getVideos(){
+        return rentVideos;
+    }
     
     @Override
     public String toString(){
-        return name + id;
+        return id + ": " + name + " , Videos: " + rentVideos.toString();
     }
     
     @Override
-    public int hashCode() {
-        int hash = 1;
-        hash = hash * 17 +  Integer.parseInt(id);
-        hash = hash * 31 + name.hashCode();
-        
-        return hash;
-    }
-    
-    public boolean isEqualTo(String name){
-        return (Objects.equals(this.name, name));
-        //&& title.equals(videoB.getTitle())
+    public boolean equals(Object other){
+        //check if same type of object
+        if (!(other instanceof Customer)) {
+            return false;
+        }
+        Customer that = (Customer) other;//create Video from Object
+        return (name.equals(that.getName()) && id.equals(that.getId()));
     }
 }

@@ -23,7 +23,24 @@ public class VideoStore {
         // create char varialbes
         String choice;
         String again;
-        Store videoStore = new Store();
+        
+        //switch for data structure
+        Store videoStore;
+        String data_structure = "BST";
+        switch(data_structure){
+            case "SSL":
+                videoStore = new Store();
+                break;
+            case "DLL":
+                videoStore = new DLLStore();
+                break;
+            case "BST":
+                videoStore = new BSTStore();
+                break;    
+            default:
+                videoStore = new Store();
+                break;
+        }
         
         int id_counter = 0;
         
@@ -46,21 +63,21 @@ public class VideoStore {
         
         for(int i=0; i < 5; i++){
             String video_id = D.i2s(id_counter);id_counter++;
-            Video v = new Video(video_titles[i], video_id);
+            Video v = new Video(video_titles[i]);
             videoStore.setVideoInStore(v);
-            
-            String customer_id = D.i2s(customer_counter);customer_counter++;
-            Customer c = new Customer(customer_names[i], customer_id);
-            videoStore.setCustomerInStore(c);
+    
+            Customer c = new Customer(customer_names[i]);
+            //videoStore.setCustomerInStore(c);
         }
         
-        Customer owen = new Customer("Owen", "9");
-        videoStore.setCustomerInStore(owen);
-            
-        videoStore.printInStoreCustomers();
+        Customer owen = new Customer("Owen");
+//        videoStore.setCustomerInStore(owen);
+//            
+//        videoStore.printInStoreCustomers();
         
         
         do {
+            //videoStore.printInStoreVideos();
             //ask the user which operation they would like to perform
             //Input Choice
             
@@ -91,53 +108,32 @@ public class VideoStore {
                 case "1":
                     System.out.println("Please enter the title and id of video");
                     System.out.println("Title: ");
-                    String video_title = KBinput.nextLine();//System.out.println(video_title);
-//                    System.out.println("Id: ");
-//                    String video_id = KBinput.nextLine();//System.out.println(video_id);
-                    String video_id = D.i2s(videoStore.id_counter);videoStore.id_counter = videoStore.id_counter + 1;
-                    Video v = new Video(video_title, video_id);
+                    String video_title = KBinput.nextLine();
+                    Video v = new Video(video_title);
                     videoStore.setVideoInStore(v);
-                    videoStore.printInStoreVideos();
-
                     break;
                 case "2":
                     System.out.println("Please enter the title and id of video you wish to delete.");
                     System.out.println("Title: ");
                     String video_title_d = KBinput.nextLine();
                     Video vDelete = new Video(video_title_d);
-//                    D.p("before delete:");
-//                    videoStore.printInStoreVideos();
-                    
                     videoStore.removeVideoInStore(vDelete);
-                    
-//                    D.p("after delete:");
-//                    videoStore.printInStoreVideos();
                     break;
                 case "3":
                     System.out.println("Please enter customer name");
                     System.out.println("Name: ");
-                    String customer_name = KBinput.nextLine();//System.out.println(video_title);
-//                    System.out.println("Id: ");
-//                    String video_id = KBinput.nextLine();//System.out.println(video_id);
-                    String customer_id = D.i2s(customer_counter);customer_counter++;
-                    Customer c = new Customer(customer_name, customer_id);
+                    String customer_name = KBinput.nextLine();
+                    Customer c = new Customer(customer_name);
                     videoStore.setCustomerInStore(c);
-                    videoStore.printInStoreCustomers();
                     break;
                 case "4":
                     System.out.println("Please enter the name and id of the customer you wish to delete.");
                     System.out.println("Name: ");
-                    String customer_name_d = KBinput.nextLine();//System.out.println(video_title);
+                    String customer_name_d = KBinput.nextLine();
                     System.out.println("Id: ");
-                    String custome_id_d = KBinput.nextLine();//System.out.println(video_id);
-                    Customer cDelete = new Customer(customer_name_d, custome_id_d);
-//                    D.p("before delete:");
-//                    videoStore.printInStoreCustomers();
-                    
+                    String custome_id_d = KBinput.nextLine();
+                    Customer cDelete = new Customer(customer_name_d, D.s2i(custome_id_d));
                     videoStore.removeCustomerInStore(cDelete);
-                    
-//                    D.p("after delete:");
-//                    videoStore.printInStoreCustomers();
                     break;
                 case "5":
                     videoStore.printInStoreVideos();
@@ -146,7 +142,7 @@ public class VideoStore {
                     String video_search_title = KBinput.nextLine();
                     Video searchVideo = new Video(video_search_title);
                     boolean video_exists = videoStore.contains(searchVideo);
-                    D.p(Boolean.toString(video_exists));
+                    D.p(Boolean.toString(video_exists));//NTDB  - formet the print a little nicer
                     
                     break;
                 case "6":
@@ -155,21 +151,16 @@ public class VideoStore {
                     String customer_name_co = KBinput.nextLine();//System.out.println(video_title);
                     System.out.println("Id: ");
                     String custome_id_co = KBinput.nextLine();//System.out.println(video_id);
-                    Customer cCheckout = new Customer(customer_name_co, custome_id_co);
+                    Customer cCheckout = new Customer(customer_name_co, D.s2i(custome_id_co));
                     
                     System.out.println("Please enter the title of the video you wish to checkout.");
                     System.out.println("Title: ");
                     String video_title_co = KBinput.nextLine();
                     Video vCheckOut = new Video(video_title_co);
                     
-                    D.p("before checkout: ");
-                    videoStore.printInStoreCustomers();videoStore.printInStoreVideos();
-                    
                     boolean checked_out_successfully = videoStore.checkout(cCheckout, vCheckOut);
                     D.p(Boolean.toString(checked_out_successfully));
                     
-                    D.p("after checkout: ");
-                    videoStore.printInStoreCustomers();videoStore.printInStoreVideos();
                     break;
                 case "7":
                     System.out.println("Please enter the name and id of the customer you wish checkin.");
@@ -177,7 +168,7 @@ public class VideoStore {
                     String customer_name_ci = KBinput.nextLine();//System.out.println(video_title);
                     System.out.println("Id: ");
                     String custome_id_ci = KBinput.nextLine();//System.out.println(video_id);
-                    Customer cCheckin = new Customer(customer_name_ci, custome_id_ci);
+                    Customer cCheckin = new Customer(customer_name_ci, D.s2i(custome_id_ci));
                     
                     System.out.println("Please enter the title of the video you wish to checkin.");
                     System.out.println("Title: ");
@@ -199,13 +190,16 @@ public class VideoStore {
                     break;
                 case "9":
                     //NTBD
-                    videoStore.printAllVideos();
+                    D.p("NTDB");
+                    //videoStore.printAllVideos();
                     break;
                 case "10":
                     videoStore.printInStoreVideos();
                     break;
                 case "11":
-                    D.p("needs to be done");
+                    D.p("NTDB");
+                    String checked_out_videos = videoStore.getCheckedOutVideosString();
+                    //D.p(checked_out_videos);
                     break;
                 case "12":
                     System.out.println("Please enter the name and id of the customer you wish to see current checkedout vidoes.");
@@ -213,7 +207,7 @@ public class VideoStore {
                     String customer_name_vids = KBinput.nextLine();//System.out.println(video_title);
                     System.out.println("Id: ");
                     String custome_id_vids = KBinput.nextLine();//System.out.println(video_id);
-                    Customer cVideosCheckedOut = new Customer(customer_name_vids, custome_id_vids);
+                    Customer cVideosCheckedOut = new Customer(customer_name_vids, D.s2i(custome_id_vids));
                     
                     videoStore.printCustomersVideos(cVideosCheckedOut);
                     
@@ -256,6 +250,11 @@ class D {
      */
     public static String i2s(int i){
       String s  = Integer.toString(i);
+      return s;
+    }
+    
+    public static int s2i(String num_string){
+      int s  = Integer.parseInt(num_string);
       return s;
     }
 }

@@ -13,23 +13,28 @@ import java.util.Objects;
 public class Video {
     
     private String title;
-    private String id;
+    private int id;
     
-    public Video(String title, String id){
+    public Video(String title, int id){
         this.title = title;
         this.id = id;
     }
     
     public Video(String title){
         this.title = title;
+        this.id = 0;
     }
     
     public String getTitle(){
         return title;
     }
     
-    public String getId(){
+    public int getId(){
         return id;
+    }
+    
+    public void setId(int id){
+        this.id = id;
     }
     
 //    @Override

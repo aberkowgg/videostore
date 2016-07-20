@@ -16,9 +16,18 @@ public class Store {
     MySLList videoInStore = new MySLList();
     MySLList customerList = new MySLList();
     public int id_counter = 0;
+    public int customer_counter = 0;
     
     public Store(){
         
+    }
+    
+    protected MySLList getVideos(){
+        return videoInStore;
+    }
+    
+    protected MySLList getCustomer(){
+        return customerList;
     }
     
     public boolean checkout(Customer customer, Video video){
@@ -30,7 +39,7 @@ public class Store {
         //check if video is in store
         if(contains(video)){
             Video checkedOutVideo = removeVideoInStore(video);
-            Customer listCustomer =  (Customer) customerList.get(customer);
+            Customer listCustomer =  (Customer) getCustomer().get(customer);
             listCustomer.rentVideo(checkedOutVideo);
             return true;
         }else{
@@ -46,7 +55,7 @@ public class Store {
             setCustomerInStore(customer);//add customer
         }
         
-        Customer listCustomer =  (Customer) customerList.get(customer);
+        Customer listCustomer =  (Customer) getCustomer().get(customer);
         //check if customer has video
         if(listCustomer.getVideos().contains(video)){
             Video checkedInVideo = listCustomer.checkInVideo(video);
@@ -65,49 +74,78 @@ public class Store {
             return;
         }
         
-        Customer listCustomer =  (Customer) customerList.get(customer);
+        Customer listCustomer =  (Customer) getCustomer().get(customer);
         System.out.println(listCustomer.getVideos().toString());
         
     }
     
     public void setVideoInStore(Video video){
-        videoInStore.insert(video);
+        if(video.getId() == 0){
+            id_counter++;
+            video.setId(id_counter);
+        }
+        getVideos().insert(video);
     }
     
+    
+    
     public Video removeVideoInStore(Video video){
-        return (Video) videoInStore.remove(video);
+        return (Video) getVideos().remove(video);
     }
     
     public Object removeVideoInStore(String video_title){
-        return videoInStore.remove(video_title);
+        return getVideos().remove(video_title);
     }
     
     public void printInStoreVideos(){
-        System.out.println(videoInStore.toString());
+        System.out.println(getVideos().toString());
     }
     
     public boolean contains(Video video){
-        return videoInStore.contains(video);
+        return getVideos().contains(video);
     }
     
     //customer stuff
     public void setCustomerInStore(Customer customer){
-        customerList.insert(customer);
+        if(customer.getId() == 0){
+            customer_counter++;
+            customer.setId(customer_counter);
+        }
+        getCustomer().insert(customer);
     }
     
     public void removeCustomerInStore(Customer customer){
-        customerList.remove(customer);
+        getCustomer().remove(customer);
     }
     
     public void printInStoreCustomers(){
-        System.out.println(customerList.toString());
+        System.out.println(getCustomer().toString());
     }
     
     public boolean contains(Customer customer){
-        return customerList.contains(customer);
+        return getCustomer().contains(customer);
+    }
+    
+    public String getCheckedOutVideosString(){
+        System.out.println("getting here");
+        String video_string = "";
+        SLListNode ref = getCustomer().getHead();
+        Customer tmp;
+        
+        if (ref != null){
+            tmp = (Customer) ref.data;
+            video_string += tmp.getVideos().toString();
+        }
+        while(ref.getNext() != null){
+            tmp = (Customer) ref.getNext().data;
+            ref = ref.getNext();
+            video_string += tmp.getVideos().toString();
+        }
+        
+        return video_string;
     }
     
     public void printAllVideos(){
-        System.out.println("Needs to be done.");
+        System.out.println(getVideos().toString() + getCheckedOutVideosString());
     }
 }

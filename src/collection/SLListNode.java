@@ -25,8 +25,13 @@ public class SLListNode {
             this.next = next;
         }
         
+       
         public Object getElement(){
             return data;
+        }
+        
+        public SLListNode getNext(){
+            return next;
         }
         
         

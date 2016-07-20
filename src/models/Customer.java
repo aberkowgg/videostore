@@ -14,20 +14,29 @@ import java.util.Objects;
  */
 public class Customer {
     private String name;
-    public String id;
+    public int id;
     public MySLList rentVideos = new MySLList();
     
-    public Customer(String name, String id){
+    public Customer(String name, int id){
         this.name = name;
         this.id = id;
+    }
+    
+    public Customer(String name){
+        this.name = name;
+        this.id = 0;
     }
     
     public String getName(){
         return name;
     }
     
-    public String getId(){
+    public int getId(){
         return id;
+    }
+    
+    public void setId(int id){
+        this.id = id;
     }
     
     public void rentVideo(Video video){
@@ -55,6 +64,6 @@ public class Customer {
             return false;
         }
         Customer that = (Customer) other;//create Video from Object
-        return (name.equals(that.getName()) && id.equals(that.getId()));
+        return (name.equals(that.getName()) && id == that.getId());
     }
 }

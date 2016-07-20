@@ -21,6 +21,11 @@ public class MySLList {
     public MySLList() {
         head = null;
     }
+    
+    public SLListNode getHead(){
+        return head;
+    }
+    
 
     /**
      * Insert object into front of list

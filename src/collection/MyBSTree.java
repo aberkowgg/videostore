@@ -151,7 +151,7 @@ public class MyBSTree extends MySLList{
      * @param data the int you are searching the tree for
      * @return 
      */
-    public boolean contains(int data) {
+    public boolean contains(Object data) {
         return contains(root, data);
     }
 
@@ -173,6 +173,35 @@ public class MyBSTree extends MySLList{
             return contains(node.right, data);
         }
 
+    }
+    
+    
+    public TreeNode getNode(Object data) {
+        return get(root, data);
+    }
+
+    private TreeNode get(TreeNode node, Object data) {
+        if (node == null) {
+            return null;
+        } else if (node.getData().hashCode() == data.hashCode()){
+            return node;
+        } else if (data.hashCode() < node.getData().hashCode()) {
+            return get(node.left, data);
+        } else {
+            return get(node.right, data);
+        }
+
+    }
+    
+    public Object remove(Object data){
+        TreeNode delNode = getNode(data);
+        if(delNode == null){
+            D.p("doesnt exist");
+            return null;
+        }else{
+            D.p("yay  " + delNode.getData().toString());
+            return delNode.getData();
+        }
     }
     
     @Override

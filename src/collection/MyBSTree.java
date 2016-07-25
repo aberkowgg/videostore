@@ -29,7 +29,8 @@ public class MyBSTree extends MySLList{
      * 
      * @param data data contained by new node
      */
-    public void insert(Object data) {
+    @Override
+    public void insert(Comparable data) {
         System.out.println("bst add");
         if (root == null) {
             root = new TreeNode(data, null, null);
@@ -44,8 +45,9 @@ public class MyBSTree extends MySLList{
      * @param node node that the new node will be the child of
      * @param data data contained in new node
      */
-    private void add(TreeNode node, Object data) {
-        if (node.getData().hashCode() > data.hashCode()) {
+    private void add(TreeNode node, Comparable data) {
+        //if comes before in alpha
+        if (node.getData().compareTo(data) > 0) {
             if (node.left == null) {
                 node.left = new TreeNode(data, null, null);
             } else {
@@ -151,7 +153,8 @@ public class MyBSTree extends MySLList{
      * @param data the int you are searching the tree for
      * @return 
      */
-    public boolean contains(Object data) {
+    @Override
+    public boolean contains(Comparable data) {
         return contains(root, data);
     }
 
@@ -162,12 +165,13 @@ public class MyBSTree extends MySLList{
      * @param data what you are searching for
      * @return 
      */
-    private boolean contains(TreeNode node, Object data) {
+    private boolean contains(TreeNode node, Comparable data) {
         if (node == null) {
             return false;
-        } else if (node.getData().hashCode() == data.hashCode()){
+        } else if (data.compareTo(node.getData()) == 0){
             return true;
-        } else if (data.hashCode() < node.getData().hashCode()) {
+            //node.getData().compareTo(data) > 0
+        } else if (data.compareTo(node.getData()) > 0) {
             return contains(node.left, data);
         } else {
             return contains(node.right, data);
@@ -176,16 +180,17 @@ public class MyBSTree extends MySLList{
     }
     
     
-    public TreeNode getNode(Object data) {
+    public TreeNode getNode(Comparable data) {
         return get(root, data);
     }
 
-    private TreeNode get(TreeNode node, Object data) {
+    private TreeNode get(TreeNode node, Comparable data) {
         if (node == null) {
+            D.p("root empty");
             return null;
-        } else if (node.getData().hashCode() == data.hashCode()){
+        } else if (data.compareTo(node.getData()) == 0){
             return node;
-        } else if (data.hashCode() < node.getData().hashCode()) {
+        } else if (data.compareTo(node.getData()) < 0) {
             return get(node.left, data);
         } else {
             return get(node.right, data);
@@ -193,8 +198,10 @@ public class MyBSTree extends MySLList{
 
     }
     
-    public Object remove(Object data){
-        TreeNode delNode = getNode(data);
+    
+    @Override
+    public Comparable remove(Comparable data){
+        TreeNode delNode = removeNode(data);
         if(delNode == null){
             D.p("doesnt exist");
             return null;
@@ -202,6 +209,74 @@ public class MyBSTree extends MySLList{
             D.p("yay  " + delNode.getData().toString());
             return delNode.getData();
         }
+    }
+    
+    private TreeNode removeNode(Comparable data) {
+        //if the root node is the delete node
+        if(data.compareTo(root.getData()) == 0){
+            //RENAME THIS WHOLE BLOACK INTO SHIFT
+            //if has two child notes
+            TreeNode ref_right = root.getRight();
+            TreeNode ref_left = root.getLeft();
+            //if node has two levaes
+            if(root.hasTwoLeaves()){
+                if(ref_right.getLeft() == null){//if right node has no left node
+                    TreeNode dRoot = root;
+                    root = ref_right;
+                    root.setLeft(ref_left);
+                }else{
+                    TreeNode w = ref_right;
+                    while(w.getLeft().getLeft() != null){
+                        w = w.getLeft();
+                    }
+                    Comparable wData = w.getLeft().getData();//data 
+                    if(w.getLeft().isExteranlNode()){
+                        w.setLeft(null);//set w's left to null
+                    }else{
+                        w.setLeft(w.getLeft().getRight());
+                    }
+                    root.set(wData);//set data from removed node to root
+                }
+                return root;
+            }else if(root.hasLeft()){
+                root = root.getLeft();
+            }else if(root.hasRight()){
+                root = root.getRight();
+            }else{
+                root.set(null);
+            }
+        }
+            
+        return remove(root, data);
+    }
+
+    private TreeNode remove(TreeNode node, Comparable data) {
+        if (node == null) {
+            D.p("root empty");
+            return null;
+        } 
+        
+        //will only trigger is root is the node
+        if (data.compareTo(node.getData()) == 0){
+            //than delete
+            //if no left child
+            if(node.getLeft().getData() == null){
+                //if right also empty
+                if(node.getRight().getData() == null){
+                }
+            }else if(node.getRight().getData() == null){//if left has data but not right
+                
+            }
+            return node;
+        } 
+        
+        //neither node matches so move on
+        if (data.compareTo(node.getData()) < 0) {
+            return get(node.left, data);
+        } else {
+            return get(node.right, data);
+        }
+
     }
     
     @Override
@@ -222,7 +297,7 @@ class TreeNode {
     // link to left node
     TreeNode left;
     // intergar stored in node
-    Object data;
+    Comparable data;
 
     /**
      * Constructor for TreeNode
@@ -231,13 +306,47 @@ class TreeNode {
      * @param left link to left node
      * @param right link to right node
      */
-    TreeNode(Object data, TreeNode left, TreeNode right) {
+    TreeNode(Comparable data, TreeNode left, TreeNode right) {
         this.data = data;
         this.left = left;
         this.right = right;
     }
     
-    public Object getData(){
+    public TreeNode getLeft(){
+        return left;
+    }
+    
+    public TreeNode getRight(){
+        return right;
+    }
+    
+    public Comparable getData(){
         return data;
     }
+    
+    public void set(Comparable data){
+        this.data = data;
+    }
+    
+    public void setLeft(TreeNode node){
+        left = node;
+    }
+    
+    public boolean hasTwoLeaves(){
+        return (getLeft() != null && getRight() != null);
+    }
+    
+    public boolean isExteranlNode(){
+        return (getLeft() == null && getRight() == null);
+    }
+    
+    public boolean hasLeft(){
+        return left != null;
+    }
+    
+    public boolean hasRight(){
+        return right != null;
+    }
+    
+    
 }

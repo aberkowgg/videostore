@@ -10,7 +10,7 @@ package collection;
 public class SLListNode {
     
         // Object stored in node
-        public Object data;
+        public Comparable data;
         // Link to next node in linked list
         SLListNode next;
 
@@ -20,7 +20,7 @@ public class SLListNode {
          * @param data object you wish to store
          * @param next link to nexet node in list
          */
-        SLListNode(Object data, SLListNode next) {
+        SLListNode(Comparable data, SLListNode next) {
             this.data = data;
             this.next = next;
         }

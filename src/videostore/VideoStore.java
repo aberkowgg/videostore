@@ -18,6 +18,9 @@ public class VideoStore {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
+        
+       
         // create Scanner
         Scanner KBinput = new Scanner(System.in);
         // create char varialbes
@@ -36,7 +39,10 @@ public class VideoStore {
                 break;
             case "BST":
                 videoStore = new BSTStore();
-                break;    
+                break;
+            case "AVL":
+                videoStore = new BSTStore();
+                break; 
             default:
                 videoStore = new Store();
                 break;
@@ -46,22 +52,28 @@ public class VideoStore {
         
         int customer_counter = 0;//for cusotmer
         
-        String[] video_titles = new String[5];
+        String[] video_titles = new String[8];
         video_titles[0] = "Fast & Furious";
         video_titles[1] = "Xmen";
         video_titles[2] = "Deadpool";
         video_titles[3] = "Starwars";
         video_titles[4] = "Harry Potter";
+        video_titles[5] = "Zack";
+        video_titles[6] = "Eeee";
+        video_titles[7] = "Aaaa";
         
-        String[] customer_names = new String[5];
+        String[] customer_names = new String[8];
         customer_names[0] = "Andrew";
         customer_names[1] = "Ben";
         customer_names[2] = "Perons";
         customer_names[3] = "Stella";
         customer_names[4] = "Neil";
+        customer_names[5] = "zack";
+        customer_names[6] = "eeee";
+        customer_names[7] = "aaaa";
         
         
-        for(int i=0; i < 5; i++){
+        for(int i=0; i < 8; i++){
             String video_id = D.i2s(id_counter);id_counter++;
             Video v = new Video(video_titles[i]);
             videoStore.setVideoInStore(v);
@@ -70,7 +82,15 @@ public class VideoStore {
             //videoStore.setCustomerInStore(c);
         }
         
+        Customer andrew = new Customer("Andrew");
         Customer owen = new Customer("Owen");
+        Customer zack = new Customer("Zack");
+        Video ff = new Video("Fast & Furious");
+        Video ee = new Video("Eeee");
+        D.p("Andrew == Andrew " + D.i2s(andrew.compareTo(andrew)));
+        D.p("Owen == Andrew "+ D.i2s(owen.compareTo(andrew)));
+        D.p("Owen == Zack " + D.i2s(owen.compareTo(zack)));
+        D.p("Fast & Furious == eeee " + D.i2s(ff.compareTo(ee)));
 //        videoStore.setCustomerInStore(owen);
 //            
 //        videoStore.printInStoreCustomers();

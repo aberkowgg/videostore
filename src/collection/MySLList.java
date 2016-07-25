@@ -32,7 +32,7 @@ public class MySLList {
      * 
      * @param data Object you wish to insert
      */
-    public void insert(Object data) {
+    public void insert(Comparable data) {
         if (head == null) {
             head = new SLListNode(data, null);
         } else {
@@ -47,7 +47,7 @@ public class MySLList {
         head = null;
     }
     
-    public boolean contains(Object element){
+    public boolean contains(Comparable element){
         SLListNode ref = head;
         if(ref.getElement().equals(element)){
             return true;
@@ -61,7 +61,7 @@ public class MySLList {
         return true;
     }
     
-    public Object get(Object element){
+    public Object get(Comparable element){
         SLListNode ref = head;
         if(ref.getElement().equals(element)){
             Object temp = head.data;
@@ -73,7 +73,7 @@ public class MySLList {
         if(ref.next == null){
             return null;
         }
-        Object rem = ref.next.data;
+        Comparable rem = ref.next.data;
         return rem;
     }
     
@@ -83,10 +83,10 @@ public class MySLList {
      * @param element Object you wish to remove from list
      * @return Object removed, returns null if does not exist.
      */
-    public Object remove(Object element){
+    public Comparable remove(Comparable element){
         SLListNode ref = head;
         if(ref.getElement().equals(element)){
-            Object temp = head.data;
+            Comparable temp = head.data;
             head = head.next;
             return temp;
         }
@@ -96,7 +96,7 @@ public class MySLList {
         if(ref.next == null){
             return null;
         }
-        Object rem = ref.next.data;
+        Comparable rem = ref.next.data;
         ref.next = ref.next.next;
         return rem;
     }

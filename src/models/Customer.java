@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @author andrewberkow
  */
-public class Customer {
+public class Customer implements Comparable {
     private String name;
     public int id;
     public MySLList rentVideos = new MySLList();
@@ -65,5 +65,18 @@ public class Customer {
         }
         Customer that = (Customer) other;//create Video from Object
         return (name.equals(that.getName()) && id == that.getId());
+    }
+
+    @Override
+    public int compareTo(Object obj) {
+        if(this.getClass().equals(obj.getClass())){
+            Customer cust2 = (Customer) obj;
+            String customer_this = getName() + "_" + getId();
+            String customer_that = cust2.getName() + "_" + cust2.getId();
+            return customer_this.compareTo(customer_that);
+        }else{
+            throw new UnsupportedOperationException("Classes not of same type"); //To change body of generated methods, choose Tools | Templates.
+        }
+        
     }
 }

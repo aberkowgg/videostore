@@ -42,7 +42,7 @@ public class MyDLList extends MySLList{
         return trail.getPrev(); // last element is before trailer 
     }
     
-    private DLListNode getNode(Object element){
+    private DLListNode getNode(Comparable element){
         DLListNode ref = head.getNext();
         while(ref.getElement() != null && !ref.getElement().equals(element)){
             ref = ref.getNext();
@@ -53,7 +53,7 @@ public class MyDLList extends MySLList{
         return ref;
     }
     
-    public Object get(Object element){
+    public Comparable get(Comparable element){
         D.p("DDL get()");
         DLListNode needle = getNode(element);
         if(needle == null){
@@ -63,7 +63,7 @@ public class MyDLList extends MySLList{
         }
     }
     
-    public boolean contains(Object element){
+    public boolean contains(Comparable element){
         D.p("DDL containts()");
         if(get(element) == null){
             return false;
@@ -72,22 +72,22 @@ public class MyDLList extends MySLList{
     }
     
     /* Adds element e to the front of the list. */
-    public void addFirst(Object obj) {
+    public void addFirst(Comparable obj) {
         addBetween(obj, head, head.getNext());
     }
     
     @Override
-    public void insert(Object obj){
+    public void insert(Comparable obj){
         D.p("DDL Insert()");
         addFirst(obj);
     }
     /* Adds element e to the end of the list. */
-    public void addLast(Object obj) {
+    public void addLast(Comparable obj) {
         addBetween(obj, trail.getPrev(), trail);
     }
     
     /* Adds element e to the linked list in between the given nodes. */
-    private void addBetween(Object obj, DLListNode predecessor, DLListNode successor) {
+    private void addBetween(Comparable obj, DLListNode predecessor, DLListNode successor) {
         
         if(head.getNext().getElement() != null){
             System.out.println(head.getNext().getElement().toString());
@@ -101,7 +101,7 @@ public class MyDLList extends MySLList{
     }
     
     @Override
-    public Object remove(Object obj){
+    public Comparable remove(Comparable obj){
          D.p("DDL remove()");
         D.p("removeing");
         DLListNode delNode = getNode(obj);

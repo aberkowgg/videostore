@@ -12,18 +12,18 @@ package collection;
 public class DLListNode{
     
      // Object stored in node
-    public Object data;
+    public Comparable data;
     // Link to next node in linked list
     private DLListNode next;
     private DLListNode prev;
         
-    DLListNode(Object data, DLListNode prev, DLListNode next){
+    DLListNode(Comparable data, DLListNode prev, DLListNode next){
         this.data = data;
         this.next = next;
         this.prev = prev;
     }
     
-    public Object getElement(){
+    public Comparable getElement(){
         return data;
     }
         

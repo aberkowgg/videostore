@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * @author andrewberkow
  */
-public class Video {
+public class Video implements Comparable {
     
     private String title;
     private int id;
@@ -62,5 +62,19 @@ public class Video {
         int hash = 5;
         hash = 31 * hash + Objects.hashCode(this.title);
         return hash;
+    }
+    
+    @Override
+    public int compareTo(Object obj) {
+        if(this.getClass().equals(obj.getClass())){
+            Video vid2 = (Video) obj;
+            String vid_this = getTitle();
+            String vid_that = vid2.getTitle();
+            System.out.println("Compare " +vid_this + " to " +  vid_that);
+            return vid_this.compareTo(vid_that);
+        }else{
+            throw new UnsupportedOperationException("Classes not of same type"); //To change body of generated methods, choose Tools | Templates.
+        }
+        
     }
 }

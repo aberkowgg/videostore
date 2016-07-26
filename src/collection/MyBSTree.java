@@ -211,20 +211,21 @@ public class MyBSTree extends MySLList{
         }
     }
     
-    private TreeNode removeNode(Comparable data) {
-        //if the root node is the delete node
-        if(data.compareTo(root.getData()) == 0){
-            //RENAME THIS WHOLE BLOACK INTO SHIFT
+    private TreeNode removeAndShift(TreeNode deleteNode){
+            D.p("removeAndShift");
             //if has two child notes
-            TreeNode ref_right = root.getRight();
-            TreeNode ref_left = root.getLeft();
+            TreeNode ref_right = deleteNode.getRight();
+            TreeNode ref_left = deleteNode.getLeft();
             //if node has two levaes
-            if(root.hasTwoLeaves()){
+            if(deleteNode.hasTwoLeaves()){
+                D.p("deleteNode.hasTwoLeaves");
                 if(ref_right.getLeft() == null){//if right node has no left node
-                    TreeNode dRoot = root;
-                    root = ref_right;
-                    root.setLeft(ref_left);
+                    D.p("qqqqq");
+                    TreeNode dRoot = deleteNode;
+                    deleteNode = ref_right;
+                    deleteNode.setLeft(ref_left);
                 }else{
+                    D.p("wwwwww");
                     TreeNode w = ref_right;
                     while(w.getLeft().getLeft() != null){
                         w = w.getLeft();
@@ -235,16 +236,28 @@ public class MyBSTree extends MySLList{
                     }else{
                         w.setLeft(w.getLeft().getRight());
                     }
-                    root.set(wData);//set data from removed node to root
+                    deleteNode.set(wData);//set data from removed node to root
                 }
-                return root;
-            }else if(root.hasLeft()){
-                root = root.getLeft();
-            }else if(root.hasRight()){
-                root = root.getRight();
+                
+            }else if(deleteNode.hasLeft()){
+                D.p("has left");
+                deleteNode = deleteNode.getLeft();
+            }else if(deleteNode.hasRight()){
+                D.p("has right");
+                deleteNode = deleteNode.getRight();
             }else{
-                root.set(null);
+                D.p("has neither");
+                deleteNode.set(null);
+                return null;
             }
+            return deleteNode;
+    }
+    
+    private TreeNode removeNode(Comparable data) {
+        //if the root node is the delete node
+        if(data.compareTo(root.getData()) == 0){
+              root = removeAndShift(root);
+              return root;
         }
             
         return remove(root, data);
@@ -252,29 +265,26 @@ public class MyBSTree extends MySLList{
 
     private TreeNode remove(TreeNode node, Comparable data) {
         if (node == null) {
-            D.p("root empty");
+            D.p("node doesn't exist");
             return null;
         } 
         
-        //will only trigger is root is the node
-        if (data.compareTo(node.getData()) == 0){
-            //than delete
-            //if no left child
-            if(node.getLeft().getData() == null){
-                //if right also empty
-                if(node.getRight().getData() == null){
-                }
-            }else if(node.getRight().getData() == null){//if left has data but not right
-                
-            }
-            return node;
-        } 
-        
-        //neither node matches so move on
         if (data.compareTo(node.getData()) < 0) {
-            return get(node.left, data);
+            D.p("111?");
+            if(data.compareTo(node.getLeft().getData()) == 0){
+                D.p("?");
+                node.setLeft(removeAndShift(node.getLeft()));
+                return node;
+            }
+            return remove(node.getLeft(), data);
         } else {
-            return get(node.right, data);
+            D.p("2222?");
+            if(data.compareTo(node.getRight().getData()) == 0){
+                D.p("333?");
+                node.setRight(removeAndShift(node.getRight()));
+                return node;
+            }
+            return remove(node.getRight(), data);
         }
 
     }
@@ -330,6 +340,10 @@ class TreeNode {
     
     public void setLeft(TreeNode node){
         left = node;
+    }
+    
+    public void setRight(TreeNode node){
+        right = node;
     }
     
     public boolean hasTwoLeaves(){

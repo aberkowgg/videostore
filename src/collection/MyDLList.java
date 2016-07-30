@@ -14,21 +14,15 @@ public class MyDLList extends MySLList{
     
     private DLListNode head;
     private DLListNode trail;
-    private int size;
+    private DLListNode ref;
     // refrence node to store removed nodes 
     
     public MyDLList(){
         head = new DLListNode(null, null, null);
         trail = new DLListNode(null, head, null);
         head.setNext(trail);
-        size = 0;
+        length = 0;
     }
-    
-    /* Returns the number of elements in the linked list. */ 
-    public int size() { return size; }
-    
-    /* Tests whether the linked list is empty. */
-    public boolean isEmpty() { return size == 0; }
     
     /* Returns (but does not remove) the first element of the list. */ 
     public DLListNode first() {
@@ -42,17 +36,84 @@ public class MyDLList extends MySLList{
         return trail.getPrev(); // last element is before trailer 
     }
     
-    private DLListNode getNode(Comparable element){
-        DLListNode ref = head.getNext();
-        while(ref.getElement() != null && !ref.getElement().equals(element)){
-            ref = ref.getNext();
-        }
-        if(ref == null){
-            return null;
-        }
-        return ref;
+    /**
+     * Tells is DLL is empty
+     * @return 
+     */
+    @Override
+    public boolean isEmpty() { return getSize() == 0; }
+    
+    /**
+     * Inserts after head 
+     * @param element 
+     */
+    @Override
+    public void insert(Comparable element){
+        D.p("DDL Insert()");
+        addFirst(element);
     }
     
+    /**
+     * Adds element e to the front of the list.
+     * @param element 
+     */
+    public void addFirst(Comparable element) {
+        addBetween(element, head, head.getNext());
+    }
+    
+    /**
+     * Adds element e to the end of the list.
+     * @param element
+     */
+    public void addLast(Comparable element) {
+        addBetween(element, trail.getPrev(), trail);
+    }
+    
+    /**
+     * Adds element e to the linked list in between the given nodes.
+     * @param element
+     * @param predecessor
+     * @param successor 
+     */
+    private void addBetween(Comparable element, DLListNode predecessor, DLListNode successor) {
+        //NTDB REMOVE THIS BLOCK IS DON'T FIGURE OUT WHAT ITS FOR
+        if(head.getNext().getElement() != null){
+            System.out.println(head.getNext().getElement().toString());
+        }
+        
+        DLListNode newest = new DLListNode(element, predecessor, successor);// create and link a new node
+        predecessor.setNext(newest);
+        successor.setPrev(newest);
+        length++;
+    }
+    
+    /**
+     * Clear DLL
+     */
+    @Override
+    public void clear() {
+        head.setNext(trail);
+        trail.setPrev(head);
+        length = 0;
+    }
+    
+    /**
+     * Check is DLL contains element
+     * @param element
+     * @return boolean
+     */
+    @Override
+    public boolean contains(Comparable element){
+        D.p("DDL containts()");
+        return get(element) != null;
+    }
+    
+    /**
+     * Gets element if in DLL
+     * @param element
+     * @return Comparable
+     */
+    @Override
     public Comparable get(Comparable element){
         D.p("DDL get()");
         DLListNode needle = getNode(element);
@@ -63,48 +124,59 @@ public class MyDLList extends MySLList{
         }
     }
     
-    public boolean contains(Comparable element){
-        D.p("DDL containts()");
-        if(get(element) == null){
-            return false;
+    /**
+     * Search DLL for node that contains element and return node. If not found return null
+     * @param element
+     * @return DLListNode
+     */
+    private DLListNode getNode(Comparable element){
+        /*
+        ref = getHead();
+        if(ref.getElement().equals(element)){
+            return ref.getElement();
         }
-        return true;
-    }
-    
-    /* Adds element e to the front of the list. */
-    public void addFirst(Comparable obj) {
-        addBetween(obj, head, head.getNext());
-    }
-    
-    @Override
-    public void insert(Comparable obj){
-        D.p("DDL Insert()");
-        addFirst(obj);
-    }
-    /* Adds element e to the end of the list. */
-    public void addLast(Comparable obj) {
-        addBetween(obj, trail.getPrev(), trail);
-    }
-    
-    /* Adds element e to the linked list in between the given nodes. */
-    private void addBetween(Comparable obj, DLListNode predecessor, DLListNode successor) {
+        while(ref.getNext() != null && !ref.getNext().getElement().equals(element)){
+            ref = ref.getNext();
+        }
+        if(ref.getNext() == null){
+            return null;
+        }
+        return ref.getNext().getElement();
+        return ref.getNext() != null;
+        */
         
-        if(head.getNext().getElement() != null){
-            System.out.println(head.getNext().getElement().toString());
+        /*
+        ref = first();
+        while(ref.getNext() != null && !ref.getElement().equals(element)){
+            D.p(ref.getElement().toString());
+            ref = ref.getNext();
         }
-        // create and link a new node
-        DLListNode newest = new DLListNode(obj, predecessor, successor);
-        predecessor.setNext(newest);
-        successor.setPrev(newest);
-        size++;
-        System.out.println("size" +  D.i2s(size));
+        if(ref.getElement() == null){
+            return null;
+        }
+        return ref;
+        */
+        
+        DLListNode ref = head.getNext();
+        while(ref.getElement() != null && !ref.getElement().equals(element)){
+            ref = ref.getNext();
+        }
+        if(ref == null){
+            return null;
+        }
+        return ref;
     }
     
+    /**
+     * Removes object from list and return it
+     * @param element
+     * @return 
+     */
     @Override
-    public Comparable remove(Comparable obj){
+    public Comparable remove(Comparable element){
          D.p("DDL remove()");
         D.p("removeing");
-        DLListNode delNode = getNode(obj);
+        DLListNode delNode = getNode(element);
         if(delNode.getElement() == null){
             return null;
         }
@@ -112,11 +184,14 @@ public class MyDLList extends MySLList{
         DLListNode successor = delNode.getNext();
         predecessor.setNext(successor);
         successor.setPrev(predecessor);
+        length --;
         return delNode.getElement();
     }
     
-    
-    
+    /**
+     * Return DLL as comma split string
+     * @return String
+     */
     @Override
      public String toString(){
          D.p("getting here");
@@ -133,9 +208,28 @@ public class MyDLList extends MySLList{
          return b; 
      }
 
-     
-     
-   
+    /**
+     * Return DLL as an array
+     * @return Comparable[]
+     */ 
+    @Override
+    public Comparable[] toArray() {
+        Comparable[] dll_array = new Comparable[getSize()];
+        if(getSize() > 0){
+            D.p("Size: " + D.i2s(getSize()));
+            ref = head.getNext();
+            dll_array[0] = ref.getElement();
+            int i = 1;
+            while(null != ref.getNext().getElement()){
+                ref = ref.getNext();
+                dll_array[i] = ref.getElement();
+                i++;
+            }
+            return dll_array;
+        }else{
+            return dll_array;
+        }        
+    } 
 }
 
 class D {

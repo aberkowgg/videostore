@@ -17,12 +17,13 @@ public class DLLStore extends Store{
     MyDLList customerList = new MyDLList();
     
     @Override
-    public void setVideoInStore(Video video){
+    public Video setVideoInStore(Video video){
         if(video.getId() == 0){
             id_counter++;
             video.setId(id_counter);
         }
         videoInStore.addFirst(video);
+        return video;
     }
     
     @Override
@@ -31,7 +32,7 @@ public class DLLStore extends Store{
     }
     
     @Override
-    protected MyDLList getCustomer(){
+    protected MyDLList getCustomers(){
         return customerList;
     }
 

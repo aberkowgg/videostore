@@ -20,7 +20,7 @@ public class BSTStore extends Store{
     }
     
     @Override
-    protected MyBSTree getCustomer(){
+    protected MyBSTree getCustomers(){
         return customerList;
     }
 }

@@ -26,12 +26,16 @@ public class SLListNode {
         }
         
        
-        public Object getElement(){
+        public Comparable getElement(){
             return data;
         }
         
         public SLListNode getNext(){
             return next;
+        }
+        
+        public void setNext(SLListNode next){
+            this.next = next;
         }
         
         

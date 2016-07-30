@@ -1,6 +1,4 @@
 package collection;
-import java.util.Objects;
-import java.util.Scanner;
 
 /**
  * MySLList stores objects in a node. Each node is linked to the next node.
@@ -8,36 +6,56 @@ import java.util.Scanner;
  * 
  * @author AndrewBerkow
  */
-public class MySLList {
+public class MySLList implements MyStructure{
 
-    // First SLListNode in the linked list
-    SLListNode head;
-    // refrence node to store removed nodes 
-    SLListNode ref;
+    SLListNode head;// First SLListNode in the linked list
+    SLListNode ref;// refrence node to store removed nodes 
+    int length;
 
     /**
      * Constructor for MySLList
      */
     public MySLList() {
         head = null;
+        length = 0;
     }
     
-    public SLListNode getHead(){
+    /**
+     * Return head node
+     * @return SLListNode
+     */
+    protected SLListNode getHead(){
         return head;
     }
     
-
+    /**
+     * Set Node as head
+     * @param node SLListNode you wish to set as head of list
+     */
+    public void setHead(SLListNode node){
+        head = node;
+    }
+    
+    /**
+     * Return size
+     * @return size
+     */
+    public int getSize(){
+        return length;
+    }
+    
     /**
      * Insert object into front of list
-     * 
-     * @param data Object you wish to insert
+     * @param element Object you wish to insert
      */
-    public void insert(Comparable data) {
+    @Override
+    public void insert(Comparable element) {
         if (head == null) {
-            head = new SLListNode(data, null);
+            head = new SLListNode(element, null);
         } else {
-            head = new SLListNode(data, head);
+            head = new SLListNode(element, head);
         }
+        length++;
     }
 
     /**
@@ -45,36 +63,44 @@ public class MySLList {
      */
     public void clear() {
         head = null;
+        length = 0;
     }
     
+    /**
+     * Search list for element. Return true if exists. O(n)
+     * NTDB - MAKE THIS CALL GET 
+     * @param element
+     * @return Boolean
+     */
+    @Override
     public boolean contains(Comparable element){
-        SLListNode ref = head;
+        ref = getHead();
         if(ref.getElement().equals(element)){
             return true;
         }
-        while(ref.next != null && !ref.next.data.equals(element)){
-            ref = ref.next;
+        while(ref.getNext() != null && !ref.getNext().getElement().equals(element)){
+            ref = ref.getNext();
         }
-        if(ref.next == null){
-            return false;
-        }
-        return true;
+        return ref.getNext() != null;
     }
     
+    /**
+     * Search for element and return if in SLL. 0(n)
+     * @param element
+     * @return Object
+     */
     public Object get(Comparable element){
-        SLListNode ref = head;
+        ref = getHead();
         if(ref.getElement().equals(element)){
-            Object temp = head.data;
-            return temp;
+            return ref.getElement();
         }
-        while(ref.next != null && !ref.next.data.equals(element)){
-            ref = ref.next;
+        while(ref.getNext() != null && !ref.getNext().getElement().equals(element)){
+            ref = ref.getNext();
         }
-        if(ref.next == null){
+        if(ref.getNext() == null){
             return null;
         }
-        Comparable rem = ref.next.data;
-        return rem;
+        return ref.getNext().getElement();
     }
     
     /**
@@ -83,32 +109,34 @@ public class MySLList {
      * @param element Object you wish to remove from list
      * @return Object removed, returns null if does not exist.
      */
+    @Override
     public Comparable remove(Comparable element){
-        SLListNode ref = head;
+        ref = getHead();
         if(ref.getElement().equals(element)){
-            Comparable temp = head.data;
-            head = head.next;
-            return temp;
+            setHead(ref.getNext());
+            return ref.getElement();
         }
-        while(ref.next != null && !ref.next.data.equals(element)){
-            ref = ref.next;
+        while(ref.getNext() != null && !ref.getNext().getElement().equals(element)){
+            ref = ref.getNext();
         }
-        if(ref.next == null){
+        if(null == ref.getNext()){
             return null;
         }
-        Comparable rem = ref.next.data;
-        ref.next = ref.next.next;
+        Comparable rem = ref.getNext().getElement();
+        ref.setNext(ref.getNext().getNext()); 
+        length--;
         return rem;
     }
+    
     /**
      * Checks if the list is empty 
      * 
      * @return True is head is empty, returns false if head contains a node
      */
      public boolean isEmpty() {
-      
-        return head == null; 
+        return getHead() == null; 
     }
+     
      /**
       * Generates a toString that contains all Objects in list, in order.
       * 
@@ -117,21 +145,36 @@ public class MySLList {
     @Override
      public String toString(){
          String b = "";
-         SLListNode ref = head;
+         ref = getHead();
          while(ref != null){
              b += (ref.data.toString() + ", ");
-             ref = ref.next;
+             ref = ref.getNext();
          }
          return b; 
      }
-     
-     
-     public void printMaxVal(int[] array_, int current_index, int currentMax){
-        int l = array_.length;
-        if(current_index >= l){
-            System.out.println(currentMax);
-        }
+        
+    /**
+     * Return SLL as an array
+     * @return Comparable[]
+     */ 
+    @Override
+    public Comparable[] toArray() {
+        if(getSize() > 0){
+            Comparable[] ssl_array = new Comparable[getSize()];
+            ref = getHead();
+            ssl_array[0] = ref.getElement();
+            int i = 1;
+            while(null != ref.getNext()){
+                ref = ref.getNext();
+                ssl_array[i] = ref.getElement();
+                i++;
+            }
+            return ssl_array;
+        }else{
+            return null;
+        }        
     }
+    
 }
 
     

@@ -180,7 +180,7 @@ public class MyBSTree extends MySLList{
     }
     
     
-    public TreeNode getNode(Comparable data) {
+    private TreeNode getNode(Comparable data) {
         return get(root, data);
     }
 

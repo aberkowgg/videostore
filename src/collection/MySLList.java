@@ -40,6 +40,7 @@ public class MySLList implements MyStructure{
      * Return size
      * @return size
      */
+    @Override
     public int getSize(){
         return length;
     }
@@ -75,13 +76,17 @@ public class MySLList implements MyStructure{
     @Override
     public boolean contains(Comparable element){
         ref = getHead();
-        if(ref.getElement().equals(element)){
-            return true;
+        if(getSize() > 0){
+            if(ref.getElement().equals(element)){
+                return true;
+            }
+            while(ref.getNext() != null && !ref.getNext().getElement().equals(element)){
+                ref = ref.getNext();
+            }
+            return ref.getNext() != null;
+        }else{
+            return false;
         }
-        while(ref.getNext() != null && !ref.getNext().getElement().equals(element)){
-            ref = ref.getNext();
-        }
-        return ref.getNext() != null;
     }
     
     /**
@@ -89,6 +94,7 @@ public class MySLList implements MyStructure{
      * @param element
      * @return Object
      */
+    @Override
     public Object get(Comparable element){
         ref = getHead();
         if(ref.getElement().equals(element)){

@@ -15,5 +15,7 @@ public interface MyStructure {
     Comparable remove(Comparable element);
     boolean contains(Comparable element);
     Comparable[] toArray();
+    Object get(Comparable element);
+    int getSize();
     
 }

@@ -44,6 +44,7 @@ public class VideoStore {
                         videoStore = new Store();
                         break;
                 }
+                VideoController vsc = new VideoController(videoStore);
                 if(args.length == 4){
                     
                     int number_of_videos = D.s2i(args[1]);
@@ -54,8 +55,8 @@ public class VideoStore {
                     
                     for(int i = 0; i < number_of_videos; i++){
                         String video_title = D.randomString();
-                        Video v = new Video(video_title);
-                        v = videoStore.setVideoInStore(v);
+                        Video v = vsc.addVideo(video_title);
+                        //v = videoStore.setVideoInStore(v);
                         video_array[i] = v;
                     }
                     
@@ -66,46 +67,41 @@ public class VideoStore {
                         customer_array[i] = c;
                     }
                     
-                //}else{
+                }else{
                     
-//                    String[] video_titles = new String[8];
-//                    video_titles[0] = "Fast & Furious";
-//                    video_titles[1] = "Xmen";
-//                    video_titles[2] = "Deadpool";
-//                    video_titles[3] = "Starwars";
-//                    video_titles[4] = "Harry Potter";
-//                    video_titles[5] = "Zack";
-//                    video_titles[6] = "Eeee";
-//                    video_titles[7] = "Aaaa";
-//
-//                    String[] customer_names = new String[8];
-//                    customer_names[0] = "Andrew";
-//                    customer_names[1] = "Ben";
-//                    customer_names[2] = "Perons";
-//                    customer_names[3] = "Stella";
-//                    customer_names[4] = "Neil";
-//                    customer_names[5] = "zack";
-//                    customer_names[6] = "eeee";
-//                    customer_names[7] = "aaaa";
-//
-//
-//                    for(int i=0; i < 8; i++){
+                    String[] video_titles = new String[8];
+                    video_titles[0] = "Fast & Furious";
+                    video_titles[1] = "Xmen";
+                    video_titles[2] = "Deadpool";
+                    video_titles[3] = "Starwars";
+                    video_titles[4] = "Harry Potter";
+                    video_titles[5] = "Zack";
+                    video_titles[6] = "Eeee";
+                    video_titles[7] = "Aaaa";
+
+                    String[] customer_names = new String[8];
+                    customer_names[0] = "Andrew";
+                    customer_names[1] = "Ben";
+                    customer_names[2] = "Perons";
+                    customer_names[3] = "Stella";
+                    customer_names[4] = "Neil";
+                    customer_names[5] = "zack";
+                    customer_names[6] = "eeee";
+                    customer_names[7] = "aaaa";
+
+
+                    for(int i=0; i < 8; i++){
 //                        Video v = new Video(video_titles[i]);
 //                        videoStore.setVideoInStore(v);
-//
-//                        Customer c = new Customer(customer_names[i]);
-//                        videoStore.setCustomerInStore(c);
-//                    }
-//
-//                    Customer andrew = new Customer("Andrew");
-//                    Customer owen = new Customer("Owen");
-//                    Customer zack = new Customer("Zack");
-//                    Video ff = new Video("Fast & Furious");
-//                    Video ee = new Video("Eeee");
-//                    D.p("Andrew == Andrew " + D.i2s(andrew.compareTo(andrew)));
-//                    D.p("Owen == Andrew "+ D.i2s(owen.compareTo(andrew)));
-//                    D.p("Owen == Zack " + D.i2s(owen.compareTo(zack)));
-//                    D.p("Fast & Furious == eeee " + D.i2s(ff.compareTo(ee)));
+                        vsc.addVideo(video_titles[i]);
+
+                        Customer c = new Customer(customer_names[i]);
+                        videoStore.setCustomerInStore(c);
+                    }
+
+                    
+                    vsc.checkOutVideo("Andrew", "1", "Aaaa");
+                    vsc.checkOutVideo("Stella", "4", "Zack");
 
                     // create Scanner
                     Scanner KBinput = new Scanner(System.in);
@@ -114,7 +110,7 @@ public class VideoStore {
                     String again;
 
                     do {
-                        //videoStore.printInStoreVideos();
+                        
                         //ask the user which operation they would like to perform
                         //Input Choice
 
@@ -135,19 +131,15 @@ public class VideoStore {
                                 + "13: To exit"+ "\n"
                                 + "==========================="
                         );
-                        //choice = KBinput.next().charAt(0);
 
                         choice= KBinput.nextLine();
-
-                        System.out.println(choice);
 
                         switch (choice) {//Method Calls
                             case "1":
                                 System.out.println("Please enter the title and id of video");
                                 System.out.println("Title: ");
                                 String video_title = KBinput.nextLine();
-                                Video v = new Video(video_title);
-                                videoStore.setVideoInStore(v);
+                                vsc.addVideo(video_title);
                                 break;
                             case "2":
                                 System.out.println("Please enter the title and id of video you wish to delete.");
@@ -183,44 +175,29 @@ public class VideoStore {
 
                                 break;
                             case "6":
-                                System.out.println("Please enter the name and id of the customer you wish to delete.");
-                                System.out.println("Name: ");
-                                String customer_name_co = KBinput.nextLine();//System.out.println(video_title);
-                                System.out.println("Id: ");
-                                String custome_id_co = KBinput.nextLine();//System.out.println(video_id);
-                                Customer cCheckout = new Customer(customer_name_co, D.s2i(custome_id_co));
-
-                                System.out.println("Please enter the title of the video you wish to checkout.");
-                                System.out.println("Title: ");
+                                D.p("Please enter the name and id of the customer who requests to checkout video.");
+                                D.p("Name: ");
+                                String customer_name_co = KBinput.nextLine();
+                                D.p("Id: ");
+                                String custome_id_co = KBinput.nextLine();
+                                D.p("Please enter the title of the video you wish to checkout.");
+                                D.p("Title: ");
                                 String video_title_co = KBinput.nextLine();
-                                Video vCheckOut = new Video(video_title_co);
-
-                                boolean checked_out_successfully = videoStore.checkout(cCheckout, vCheckOut);
+                                boolean checked_out_successfully = vsc.checkOutVideo(customer_name_co, custome_id_co, video_title_co);
                                 D.p(Boolean.toString(checked_out_successfully));
 
                                 break;
                             case "7":
-                                System.out.println("Please enter the name and id of the customer you wish checkin.");
-                                System.out.println("Name: ");
-                                String customer_name_ci = KBinput.nextLine();//System.out.println(video_title);
-                                System.out.println("Id: ");
-                                String custome_id_ci = KBinput.nextLine();//System.out.println(video_id);
-                                Customer cCheckin = new Customer(customer_name_ci, D.s2i(custome_id_ci));
-
-                                System.out.println("Please enter the title of the video you wish to checkin.");
-                                System.out.println("Title: ");
+                                D.p("Please enter the name and id of the customer you wish checkin.");
+                                D.p("Name: ");
+                                String customer_name_ci = KBinput.nextLine();
+                                D.p("Id: ");
+                                String custome_id_ci = KBinput.nextLine();
+                                D.p("Please enter the title of the video you wish to checkin.");
+                                D.p("Title: ");
                                 String video_title_ci = KBinput.nextLine();
-                                Video vCheckIn = new Video(video_title_ci);
-
-                                D.p("before checkin: ");
-                                videoStore.printInStoreCustomers();videoStore.printInStoreVideos();
-
-                                boolean checked_in_successfully = videoStore.checkin(cCheckin, vCheckIn);
+                                boolean checked_in_successfully = vsc.checkInVideo(customer_name_ci, custome_id_ci, video_title_ci);  //videoStore.checkin(cCheckin, vCheckIn);
                                 D.p(Boolean.toString(checked_in_successfully));
-
-                                D.p("after checkin: ");
-                                videoStore.printInStoreCustomers();videoStore.printInStoreVideos();
-
                                 break;
                             case "8":
                                 videoStore.printInStoreCustomers();
@@ -271,7 +248,34 @@ public class VideoStore {
     
 }
 
-
+class VideoController {
+    
+    public Store videoStore;
+    
+    public VideoController(Store store){
+        this.videoStore = store;
+    }
+    
+    public Video addVideo(String video_title ){
+        Video v = new Video(video_title);
+        videoStore.setVideoInStore(v);
+        return v;
+    }
+    
+    public boolean checkOutVideo(String customer_name, String custome_id, String video_title){
+        Customer cCheckout = new Customer(customer_name, D.s2i(custome_id));
+        Video vCheckOut = new Video(video_title);
+        boolean checked_out_successfully = videoStore.checkout(cCheckout, vCheckOut);
+        return checked_out_successfully;
+    }
+    
+    public boolean checkInVideo(String customer_name, String custome_id, String video_title){
+        Customer cCheckin = new Customer(customer_name, D.s2i(custome_id));
+        Video vCheckIn = new Video(video_title);
+        return videoStore.checkin(cCheckin, vCheckIn);
+    }
+    
+}
 
 
 

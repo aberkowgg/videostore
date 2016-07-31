@@ -13,8 +13,8 @@ import models.*;
  */
 public class Store {
     
-    MySLList videoInStore = new MySLList();
-    MySLList customerList = new MySLList();
+    MyStructure videoInStore = new MySLList();
+    MyStructure customerList = new MySLList();
     public int id_counter = 0;
     public int customer_counter = 0;
     
@@ -29,7 +29,7 @@ public class Store {
      * Encapsulate videoInStore
      * @return videoInStore
      */
-    protected MySLList getVideos(){
+    protected MyStructure getVideos(){
         return videoInStore;
     }
     
@@ -37,7 +37,7 @@ public class Store {
      * Encapsulate customerList
      * @return customerList
      */
-    protected MySLList getCustomers(){
+    protected MyStructure getCustomers(){
         return customerList;
     }
     

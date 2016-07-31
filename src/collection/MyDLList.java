@@ -255,4 +255,13 @@ class D {
       int s  = Integer.parseInt(num_string);
       return s;
     }
+    
+    public static Comparable[] concat(Comparable[] a, Comparable[] b) {
+        int aLen = a.length;
+        int bLen = b.length;
+        Comparable[] c= new Comparable[aLen+bLen];
+        System.arraycopy(a, 0, c, 0, aLen);
+        System.arraycopy(b, 0, c, aLen, bLen);
+        return c;
+     }
 }

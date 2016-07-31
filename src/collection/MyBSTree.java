@@ -8,19 +8,40 @@ package collection;
  * 
  * @author AndrewBerkow
  */
-public class MyBSTree extends MySLList{
+public class MyBSTree implements MyStructure{
 
-    // TreeNode that is the root
-    TreeNode root;
-    // TreeNode to the left of the root
-    TreeNode left;
-    // TreeNode to the right of the root
-    TreeNode right;
+    private TreeNode root;// TreeNode that is the root
+    TreeNode left;// TreeNode to the left of the root
+    TreeNode right;// TreeNode to the right of the root
+    int length;
 
+    //NTBD - CAHGNE GETDATA TO GET DLEMENT FOR NODE
     /**
      * Constructor, contains no parameters
      */
     public MyBSTree() {
+    }
+    
+    
+    /**
+     * Encapsulate root
+     * @return root
+     */
+    private TreeNode getRoot(){
+        return root;
+    }
+    
+    private void setRoot(TreeNode node){
+        root = node;
+    }
+    
+    /**
+     * Encapsulate size
+     * @return size
+     */
+    @Override
+    public int getSize(){
+        return length;
     }
 
     /**
@@ -30,185 +51,144 @@ public class MyBSTree extends MySLList{
      * @param data data contained by new node
      */
     @Override
-    public void insert(Comparable data) {
+    public void insert(Comparable element) {
         System.out.println("bst add");
-        if (root == null) {
-            root = new TreeNode(data, null, null);
+        if (getRoot() == null) {
+            setRoot(new TreeNode(element, null, null));
         } else {
-            add(root, data);
+            add(getRoot(), element);
         }
+        length++;
     }
 
     /**
-     * Recursive function called by add(data)
+     * Recursive function called by insert(element)
      * 
      * @param node node that the new node will be the child of
      * @param data data contained in new node
      */
-    private void add(TreeNode node, Comparable data) {
+    private void add(TreeNode node, Comparable element) {
         //if comes before in alpha
-        if (node.getData().compareTo(data) > 0) {
-            if (node.left == null) {
-                node.left = new TreeNode(data, null, null);
+        if (node.getData().compareTo(element) > 0) {
+            if (node.getLeft() == null) {
+                node.setLeft(new TreeNode(element, null, null));
             } else {
-                add(node.left, data);
+                add(node.getLeft(), element);
             }
         } else {
-            if (node.right == null) {
-                node.right = new TreeNode(data, null, null);
+            if (node.getRight() == null) {
+                node.setRight(new TreeNode(element, null, null));
             } else {
-                add(node.right, data);
+                add(node.getRight(), element);
             }
-        }
-    }
-
-    /**
-     * Prints a string of the tree in pre order
-     */
-    public String preorder() {
-        String s = "";
-        if (root == null) {
-            System.out.println("Tree is empty");
-        } else {
-            s += preorder(root);
-        }
-        
-        return s;
-    }
-
-    /**
-     * Recursive statement to generate pre order string
-     * 
-     * @param node node you are printing (if it has data) and the node that the
-     * children of will be called recursed
-     */
-    private String preorder(TreeNode node) {
-        String s = "";
-        if (node == null) {
-            return "";
-        } else {
-            s += node.data + ",";
-            s += preorder(node.left);
-            s += preorder(node.right);
-            return s;
-        }
-    }
-
-    /**
-     * prints the tree in order traversal
-     */
-    public void inorder() {
-        if (root == null) {
-            System.out.println("Tree is empty");
-        } else {
-            inorder(root);
-        }
-    }
-
-    /**
-     * Recursive statement called by inorder()
-     * 
-     * @param node node you recursivly call the left child of, print than
-     * recrusivly call the right child of
-     */
-    private void inorder(TreeNode node) {
-        if (node == null) {
-            return;
-        } else {
-            inorder(node.left);
-            System.out.print(node.data + ",");
-            inorder(node.right);
-        }
-    }
-    /**
-     * Prints the tree postorder traversal
-     */
-    public void postorder() {
-        if (root == null) {
-            System.out.println("Tree is empty");
-        } else {
-            postorder(root);
-        }
-    }
-
-    /**
-     * Recursive statement called by postorder()
-     * 
-     * @param node node you recursivly call the left child of, 
-     * recrusivly call the right child of than print the data
-     */
-    private void postorder(TreeNode node) {
-        if (node == null) {
-            return;
-        } else {
-            postorder(node.left);
-            postorder(node.right);
-            System.out.print(node.data + ",");
         }
     }
     
     /**
      * Checks if the tree contains the int
      * 
-     * @param data the int you are searching the tree for
-     * @return 
+     * @param element the int you are searching the tree for
+     * @return boolean
      */
     @Override
-    public boolean contains(Comparable data) {
-        return contains(root, data);
+    public boolean contains(Comparable element) {
+        return contains(getRoot(), element);
     }
 
     /**
      * Recursive statement used by contains(int data) 
      * 
      * @param node node you are checking the data of, and the data of its children
-     * @param data what you are searching for
-     * @return 
+     * @param element what you are searching for
+     * @return boolean
      */
-    private boolean contains(TreeNode node, Comparable data) {
+    private boolean contains(TreeNode node, Comparable element) {
         if (node == null) {
             return false;
-        } else if (data.compareTo(node.getData()) == 0){
+        } else if (element.compareTo(node.getData()) == 0){
             return true;
             //node.getData().compareTo(data) > 0
-        } else if (data.compareTo(node.getData()) > 0) {
-            return contains(node.left, data);
+        } else if (element.compareTo(node.getData()) < 0) {
+            return contains(node.getLeft(), element);
         } else {
-            return contains(node.right, data);
+            return contains(node.getRight(), element);
         }
-
     }
     
+    @Override
+    public Object get(Comparable element) {
+        TreeNode node = getNode(element);
+        if (node == null) {
+            return null;
+        }
+        return node.getData();
+    }
     
-    private TreeNode getNode(Comparable data) {
-        return get(root, data);
+    private TreeNode getNode(Comparable element) {
+        return get(getRoot(), element);
     }
 
-    private TreeNode get(TreeNode node, Comparable data) {
+    private TreeNode get(TreeNode node, Comparable element) {
         if (node == null) {
             D.p("root empty");
             return null;
-        } else if (data.compareTo(node.getData()) == 0){
+        } else if (element.compareTo(node.getData()) == 0){
             return node;
-        } else if (data.compareTo(node.getData()) < 0) {
-            return get(node.left, data);
+        } else if (element.compareTo(node.getData()) < 0) {
+            return get(node.left, element);
         } else {
-            return get(node.right, data);
+            return get(node.right, element);
         }
-
     }
     
-    
     @Override
-    public Comparable remove(Comparable data){
-        TreeNode delNode = removeNode(data);
+    public Comparable remove(Comparable element){
+        TreeNode delNode = removeNode(element);
         if(delNode == null){
             D.p("doesnt exist");
             return null;
         }else{
             D.p("yay  " + delNode.getData().toString());
+            length--;
             return delNode.getData();
         }
+    }
+    
+    private TreeNode removeNode(Comparable element) {
+        //if the root node is the delete node
+        if(element.compareTo(getRoot().getData()) == 0){
+              setRoot(removeAndShift(getRoot()));
+              return getRoot();
+        }
+        return remove(getRoot(), element);
+    }
+
+    private TreeNode remove(TreeNode node, Comparable element) {
+        if (node == null) {
+            D.p("node doesn't exist");
+            return null;
+        } 
+        
+        if (element.compareTo(node.getData()) < 0) {
+            D.p("111?");
+            if(element.compareTo(node.getLeft().getData()) == 0){
+                D.p("?");
+                TreeNode removedNode = node.getLeft();
+                node.setLeft(removeAndShift(node.getLeft()));
+                return removedNode;
+            }
+            return remove(node.getLeft(), element);
+        } else {
+            D.p("2222?");
+            if(element.compareTo(node.getRight().getData()) == 0){
+                TreeNode removedNode = node.getRight();
+                D.p("333?");
+                node.setRight(removeAndShift(node.getRight()));
+                return removedNode;
+            }
+            return remove(node.getRight(), element);
+        }
+
     }
     
     private TreeNode removeAndShift(TreeNode deleteNode){
@@ -247,52 +227,146 @@ public class MyBSTree extends MySLList{
                 deleteNode = deleteNode.getRight();
             }else{
                 D.p("has neither");
-                deleteNode.set(null);
                 return null;
             }
             return deleteNode;
     }
     
-    private TreeNode removeNode(Comparable data) {
-        //if the root node is the delete node
-        if(data.compareTo(root.getData()) == 0){
-              root = removeAndShift(root);
-              return root;
+    
+
+    /**
+     * Prints a string of the tree in pre order
+     */
+    public Comparable[] preorder() {
+        if (root == null) {
+            System.out.println("Tree is empty");
+            return null;
+        } else {
+            //System.out.println("Pre order");
+            return preorder(root);
         }
-            
-        return remove(root, data);
+        
     }
 
-    private TreeNode remove(TreeNode node, Comparable data) {
+    /**
+     * Recursive statement to generate pre order string
+     * 
+     * @param node node you are printing (if it has data) and the node that the
+     * children of will be called recursed
+     */
+    private Comparable[] preorder(TreeNode node) {
         if (node == null) {
-            D.p("node doesn't exist");
             return null;
-        } 
-        
-        if (data.compareTo(node.getData()) < 0) {
-            D.p("111?");
-            if(data.compareTo(node.getLeft().getData()) == 0){
-                D.p("?");
-                node.setLeft(removeAndShift(node.getLeft()));
-                return node;
-            }
-            return remove(node.getLeft(), data);
         } else {
-            D.p("2222?");
-            if(data.compareTo(node.getRight().getData()) == 0){
-                D.p("333?");
-                node.setRight(removeAndShift(node.getRight()));
-                return node;
-            }
-            return remove(node.getRight(), data);
+            Comparable[] bst_array = new Comparable[1];
+            bst_array[0] = node.getData();
+            //s += node.data + ",";
+            //System.out.println(node.getData().toString() +",");
+            //s += preorder(node.left);
+            //s += preorder(node.right);
+            Comparable[] bst_array_left = inorder(node.left);
+            if(bst_array_left != null)
+                bst_array =  D.concat(bst_array, bst_array_left);
+            
+            Comparable[] bst_array_right = inorder(node.right);
+            if(bst_array_right != null)
+                bst_array = D.concat(bst_array, bst_array_right);
+            return bst_array;
         }
+    }
 
+    /**
+     * prints the tree in order traversal
+     */
+    public Comparable[] inorder() {
+        if (root == null) {
+            System.out.println("Tree is empty");
+            return null;
+        } else {
+            //System.out.println("In order");
+            return inorder(root);
+        }
     }
     
+    /**
+     * Recursive statement called by inorder()
+     * 
+     * @param node node you recursivly call the left child of, print than
+     * recrusivly call the right child of
+     */
+    private Comparable[] inorder(TreeNode node) {
+        if (node == null) {
+            return null;
+        } else {
+            Comparable[] bst_array = new Comparable[1];
+            bst_array[0] = node.getData();
+            
+            Comparable[] bst_array_left = inorder(node.left);
+            if(bst_array_left != null)
+                bst_array =  D.concat(bst_array_left, bst_array);
+            
+            //System.out.println(node.getData().toString() +",");
+            
+            Comparable[] bst_array_right = inorder(node.right);
+            if(bst_array_right != null)
+                bst_array = D.concat(bst_array, bst_array_right);
+           return bst_array;
+        }
+    }
+    /**
+     * Prints the tree postorder traversal
+     */
+    public void postorder() {
+        if (root == null) {
+            System.out.println("Tree is empty");
+        } else {
+            postorder(root);
+        }
+    }
+
+    /**
+     * Recursive statement called by postorder()
+     * 
+     * @param node node you recursivly call the left child of, 
+     * recrusivly call the right child of than print the data
+     */
+    private void postorder(TreeNode node) {
+        if (node == null) {
+            return;
+        } else {
+            postorder(node.left);
+            postorder(node.right);
+            System.out.print(node.data + ",");
+        }
+    }
+      
     @Override
     public String toString(){
-        return preorder();
+        //toArray();
+        String s = String.join(",", toStringArray());
+        return s;
     }
+    
+    public String[] toStringArray(){
+        String[] bst_s_array = new String[getSize()];
+        Comparable[] preorder_arr = preorder();
+        for(int i = 0; i < preorder_arr.length; i++){
+            bst_s_array[i] = preorder_arr[i].toString();
+        }
+        return bst_s_array;
+    }
+
+    @Override
+    public Comparable[] toArray() {
+        Comparable[] bst_array = inorder();
+//        System.out.println("print in order array");
+//        for(int i = 0; i < bst_array.length; i++){
+//            System.out.println(bst_array[i].toString());
+//        }
+        return bst_array;
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
 
 /**
@@ -364,3 +438,5 @@ class TreeNode {
     
     
 }
+
+

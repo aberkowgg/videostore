@@ -5,22 +5,23 @@
  */
 package models;
 import collection.MyBSTree;
+import collection.MyStructure;
 
 /**
  *
  * @author andrewberkow
  */
 public class BSTStore extends Store{
-    MyBSTree videoInStore = new MyBSTree();
-    MyBSTree customerList = new MyBSTree();
+    MyStructure videoInStore = new MyBSTree();
+    MyStructure customerList = new MyBSTree();
     
     @Override
-    protected MyBSTree getVideos(){
+    protected MyStructure getVideos(){
         return videoInStore;
     }
     
     @Override
-    protected MyBSTree getCustomers(){
+    protected MyStructure getCustomers(){
         return customerList;
     }
 }

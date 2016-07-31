@@ -47,7 +47,7 @@ public class VideoStore {
                 }
                 
                 //create controller to handle videoStore methods called frequently. 
-                VideoController vsc = new VideoController(videoStore);
+                VideoController vsc = new VideoController(videoStore, data_structure);
                 
                 //if 4 paramters, execute autmotion testing to compare run times.
                 if(args.length == 4){
@@ -89,8 +89,9 @@ public class VideoStore {
                         int rand_cust;
                         Customer customer;
                             
-                            
+                        D.p(operations[i]);//figure out what step is failing.
                         switch (operations[i]){
+                            
                             case "videoInStore":
                                 vsc.videoInStore(title);
                                 break;
@@ -291,7 +292,7 @@ public class VideoStore {
                                 System.out.println("Id: ");
                                 String custome_id_vids = KBinput.nextLine();//System.out.println(video_id);
                                 if(D.isInteger(custome_id_vids)){
-                                    Customer cVideosCheckedOut = new Customer(customer_name_vids, D.s2i(custome_id_vids));
+                                    Customer cVideosCheckedOut = new Customer(customer_name_vids, D.s2i(custome_id_vids), data_structure);
 
                                     videoStore.printCustomersVideos(cVideosCheckedOut);
                                 }else{
@@ -331,9 +332,11 @@ public class VideoStore {
 class VideoController {
     
     public Store videoStore;
+    public String data_structure;
     
-    public VideoController(Store store){
+    public VideoController(Store store, String data_structure){
         this.videoStore = store;
+        this.data_structure = data_structure;
     }
     
     public Video addVideo(String video_title ){
@@ -348,12 +351,12 @@ class VideoController {
     }
     
     public Customer addCustomer(String name){
-        Customer c = new Customer(name);
+        Customer c = new Customer(name, data_structure);
         return videoStore.setCustomerInStore(c);
     }
     
     public void removeCustomer(String name,String id){
-        Customer cDelete = new Customer(name, D.s2i(id));
+        Customer cDelete = new Customer(name, D.s2i(id), data_structure);
         videoStore.removeCustomerInStore(cDelete);
     }
     
@@ -364,14 +367,14 @@ class VideoController {
     }
     
     public boolean checkOutVideo(String customer_name, String custome_id, String video_title){
-        Customer cCheckout = new Customer(customer_name, D.s2i(custome_id));
+        Customer cCheckout = new Customer(customer_name, D.s2i(custome_id), data_structure);
         Video vCheckOut = new Video(video_title);
         boolean checked_out_successfully = videoStore.checkout(cCheckout, vCheckOut);
         return checked_out_successfully;
     }
     
     public boolean checkInVideo(String customer_name, String custome_id, String video_title){
-        Customer cCheckin = new Customer(customer_name, D.s2i(custome_id));
+        Customer cCheckin = new Customer(customer_name, D.s2i(custome_id), data_structure);
         Video vCheckIn = new Video(video_title);
         return videoStore.checkin(cCheckin, vCheckIn);
     }

@@ -32,8 +32,10 @@ public class MyAVLTree extends MyBSTree{
     
     @Override
     public void setRoot(TreeNode node){
+        //D.p("1T");
         root = node;
-        root.setParent(null);
+        if(node != null)
+            root.setParent(null);
     }
     
     @Override
@@ -92,6 +94,7 @@ public class MyAVLTree extends MyBSTree{
     
     @Override
     public void rebalanceRemove(TreeNode parent, TreeNode newChild){
+        //D.p("1Z");
         TreeNode ref;
         //parent of deleted node
         if(newChild != null){
@@ -115,6 +118,7 @@ public class MyAVLTree extends MyBSTree{
                 if(balance > 1 || balance < -1){
                     TreeNode z = ref.getParent();
                     rebalance(z);
+                    remeasureInsert(parent);
                     break;
                 }
 
@@ -122,7 +126,7 @@ public class MyAVLTree extends MyBSTree{
             } 
         }
         
-        remeasureInsert(parent);
+        
         //D.p("After Balance : " + toString());
         
     }
@@ -263,9 +267,11 @@ public class MyAVLTree extends MyBSTree{
     }
     
     private void remeasureInsert(TreeNode x){
+        //D.p("1Y");
         TreeNode ref = x;
         //test to iterate through paraents
         while(ref.getParent() != null){
+            //D.p("---" + ref.getData().toString());
             ref.setHeight(max(height(ref.getLeft()), height(ref.getRight())) + 1);
             ref = ref.getParent();
         }

@@ -72,9 +72,13 @@ public class Store {
         }
         //check if video is in store
         if(contains(video)){
+            //System.out.println("1");
             Video checkedOutVideo = removeVideoInStore(video);
+            //System.out.println("2");
             Customer listCustomer =  (Customer) getCustomers().get(customer);
+            //System.out.println("3");
             listCustomer.rentVideo(checkedOutVideo);
+            //System.out.println("4");
             return true;
         }else{
             //return false if not in stock
@@ -128,7 +132,13 @@ public class Store {
      * @return 
      */
     public Video removeVideoInStore(Video video){
-        return (Video) getVideos().remove(video);
+        //System.out.println("1a");
+        MyStructure vids = getVideos();
+        //System.out.println("2a");
+        Video return_vid = (Video) vids.remove(video);
+        //System.out.println("3a");
+        return return_vid;
+        //return (Video) getVideos().remove(video);//un comment this after debug
     }
     
     /**

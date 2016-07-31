@@ -50,7 +50,7 @@ public class MyBSTree implements MyStructure{
      */
     @Override
     public void insert(Comparable element) {
-        System.out.println("bst add");
+        //System.out.println("bst add");
         if (getRoot() == null) {
             setRoot(new TreeNode(element, null, null));
             incrementSize();
@@ -149,13 +149,12 @@ public class MyBSTree implements MyStructure{
     
     @Override
     public Comparable remove(Comparable element){
+        decremenetSize();
         TreeNode delNode = removeNode(element);
         if(delNode == null){
             D.p("doesnt exist");
             return null;
         }else{
-            D.p("yay  " + delNode.getData().toString());
-            decremenetSize();
             return delNode.getData();
         }
     }
@@ -184,42 +183,52 @@ public class MyBSTree implements MyStructure{
         } 
         
         if (element.compareTo(node.getData()) < 0) {
-            D.p("111?");
-            if(element.compareTo(node.getLeft().getData()) == 0){
-                D.p("?");
-                TreeNode removedNode = node.getLeft();
-                node.setLeft(removeAndShift(node.getLeft()));
-                return removedNode;
+            //D.p("111?");
+            if(node.getLeft() != null){//failover to make sure there is something in left node
+                if(element.compareTo(node.getLeft().getData()) == 0){
+                    //D.p("?");
+                    TreeNode removedNode = node.getLeft();
+                    node.setLeft(removeAndShift(node.getLeft()));
+                    rebalanceRemove(node, node.getLeft());
+                    return removedNode;
+                }
+                return remove(node.getLeft(), element);
+            }else{
+                return null;
             }
-            return remove(node.getLeft(), element);
         } else {
-            D.p("2222?");
-            if(element.compareTo(node.getRight().getData()) == 0){
-                TreeNode removedNode = node.getRight();
-                D.p("333?");
-                node.setRight(removeAndShift(node.getRight()));
-                return removedNode;
+            //D.p("2222?");
+            if(node.getRight() != null){//failover to make sure there is something in left node
+                if(element.compareTo(node.getRight().getData()) == 0){
+                    TreeNode removedNode = node.getRight();
+                   // D.p("333?");
+                    node.setRight(removeAndShift(node.getRight()));
+                    rebalanceRemove(node, node.getRight());
+                    return removedNode;
+                }
+                return remove(node.getRight(), element);
+            }else{
+                return null;
             }
-            return remove(node.getRight(), element);
         }
 
     }
     
     private TreeNode removeAndShift(TreeNode deleteNode){
-            D.p("removeAndShift");
+            //D.p("removeAndShift");
             //if has two child notes
             TreeNode ref_right = deleteNode.getRight();
             TreeNode ref_left = deleteNode.getLeft();
             //if node has two levaes
             if(deleteNode.hasTwoLeaves()){
-                D.p("deleteNode.hasTwoLeaves");
+                //D.p("deleteNode.hasTwoLeaves");
                 if(ref_right.getLeft() == null){//if right node has no left node
-                    D.p("qqqqq");
+                    //D.p("qqqqq");
                     TreeNode dRoot = deleteNode;
                     deleteNode = ref_right;
                     deleteNode.setLeft(ref_left);
                 }else{
-                    D.p("wwwwww");
+                    //D.p("wwwwww");
                     TreeNode w = ref_right;
                     while(w.getLeft().getLeft() != null){
                         w = w.getLeft();
@@ -234,20 +243,24 @@ public class MyBSTree implements MyStructure{
                 }
                 
             }else if(deleteNode.hasLeft()){
-                D.p("has left");
+                //D.p("has left");
                 deleteNode = deleteNode.getLeft();
             }else if(deleteNode.hasRight()){
-                D.p("has right");
+                //D.p("has right");
                 deleteNode = deleteNode.getRight();
             }else{
-                D.p("has neither");
+                //D.p("has neither");
                 return null;
             }
             return deleteNode;
     }
     
     protected void rebalanceInsert(TreeNode parent, TreeNode x){
-        D.p("BST relance.");
+        //D.p("BST relance.");
+    }
+    
+    protected void rebalanceRemove(TreeNode parent, TreeNode x){
+        
     }
     
     
@@ -279,7 +292,7 @@ public class MyBSTree implements MyStructure{
             Comparable[] bst_array = new Comparable[1];
             bst_array[0] = node.getData();
             
-            D.p(node.data.toString() + "( height : " + node.getHeight() + " )");
+            //D.p(node.data.toString() + "( height : " + node.getHeight() + " )");
             //System.out.println(node.getData().toString() +",");
             //s += preorder(node.left);
             //s += preorder(node.right);
@@ -291,6 +304,7 @@ public class MyBSTree implements MyStructure{
             Comparable[] bst_array_right = preorder(node.right);
             if(bst_array_right != null)
                 bst_array = D.concat(bst_array, bst_array_right);
+            
             return bst_array;
         }
     }
@@ -368,7 +382,7 @@ public class MyBSTree implements MyStructure{
     }
     
     public String[] toStringArray(){
-        D.p("toStringArray() .... Size: " + D.i2s(getSize()));
+        //D.p("toStringArray() .... Size: " + D.i2s(getSize()));
         String[] bst_s_array = new String[getSize()];
         Comparable[] preorder_arr = preorder();
         for(int i = 0; i < preorder_arr.length; i++){

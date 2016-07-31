@@ -25,20 +25,19 @@ public class MyAVLTree extends MyBSTree{
      * Encapsulate root
      * @return root
      */
+    @Override
     public TreeNode getRoot(){
         return root;
     }
     
     @Override
     public void setRoot(TreeNode node){
-        //D.p("AVL setRoot()");
         root = node;
         root.setParent(null);
     }
     
     @Override
     public int getSize(){
-        //.p("AVL.getSize()");
         return length;
     }
     
@@ -60,7 +59,6 @@ public class MyAVLTree extends MyBSTree{
      */
     @Override
     public void insert(Comparable element) {
-        //System.out.println("avl add");
         if (getRoot() == null) {
             setRoot(new TreeNode(element, null, null));
             getRoot().setHeight(1);
@@ -68,39 +66,64 @@ public class MyAVLTree extends MyBSTree{
         } else {
             incrementSize();
             super.add(getRoot(), element);
-            
         }
     }
     
     
     @Override
     public void rebalanceInsert(TreeNode parent, TreeNode x){
-        D.p("Before Balance : " + toString());
         x.setParent(parent);
         x.setHeight(1);
         TreeNode ref = x;
         remeasureInsert(ref);
+        //D.p("Before Balance : " + toString());
         while(ref.getParent() != null){
             int balance = getBalance(ref.getParent());
-            D.p("balance.... " + D.i2s(balance));
+            //D.p("balance.... " + D.i2s(balance));
             if(balance > 1 || balance < -1){
                 TreeNode z = ref.getParent();
                 rebalance(z);
                 break;
             }
-//                //left cases
-//                if(balance > 1){
-//                    int balance2 = getBalance(ref.getParent().getLeft());
-//                    break;
-//                }
-//                //right cases
-//                if(balance < -1){
-//                    break;
-//                }
-//            }
             ref = ref.getParent();
         }
-        D.p("After Balance : " + toString());
+        remeasureInsert(x);
+    }
+    
+    @Override
+    public void rebalanceRemove(TreeNode parent, TreeNode newChild){
+        TreeNode ref;
+        //parent of deleted node
+        if(newChild != null){
+            newChild.setParent(parent);
+            ref = newChild;
+        }else{
+            ref = parent;
+        }
+        
+        remeasureInsert(ref);
+        //D.p("Before Balance : " + toString());
+        int b = getBalance(ref);
+        if(b > 1 || b < -1){
+            TreeNode z = ref.getParent();
+            rebalance(z);
+        }else{
+           //NTBD t- this might not work since not check self
+            while(ref.getParent() != null){
+                int balance = getBalance(ref.getParent());
+                //D.p("balance.... " + D.i2s(balance));
+                if(balance > 1 || balance < -1){
+                    TreeNode z = ref.getParent();
+                    rebalance(z);
+                    break;
+                }
+
+                ref = ref.getParent();
+            } 
+        }
+        
+        remeasureInsert(parent);
+        //D.p("After Balance : " + toString());
         
     }
     
@@ -139,7 +162,7 @@ public class MyAVLTree extends MyBSTree{
     }
     
     public void rotateSingleRight(TreeNode z, TreeNode y, TreeNode x){
-        D.p("rotateSingleRight()**************");
+        //D.p("rotateSingleRight()**************");
         TreeNode a = z;
         TreeNode b = y;
         TreeNode c = x;
@@ -151,7 +174,7 @@ public class MyAVLTree extends MyBSTree{
     }
     
     public void rotateSingleLeft(TreeNode z, TreeNode y, TreeNode x){
-        D.p("rotateSingleLeft()**************");
+        //D.p("rotateSingleLeft()**************");
         TreeNode a = x;
         TreeNode b = y;
         TreeNode c = z;
@@ -163,7 +186,7 @@ public class MyAVLTree extends MyBSTree{
     }
     
     public void rotateDoubleRight(TreeNode z, TreeNode y, TreeNode x){
-        D.p("rotateDoubleRight()**************");
+        //D.p("rotateDoubleRight()**************");
         TreeNode a = z;
         TreeNode b = x;
         TreeNode c = y;
@@ -177,7 +200,7 @@ public class MyAVLTree extends MyBSTree{
     
     
     public void rotateDoubleLeft(TreeNode z, TreeNode y, TreeNode x){
-        D.p("rotateDoubleLeft()**************");
+        //D.p("rotateDoubleLeft()**************");
         TreeNode a = y;
         TreeNode b = x;
         TreeNode c = z;
@@ -194,7 +217,21 @@ public class MyAVLTree extends MyBSTree{
     public void rotation(TreeNode a, TreeNode b, TreeNode c, TreeNode t0, TreeNode t1, TreeNode t2, TreeNode t3, TreeNode z){
         //attatch z to rest of tree
         if(z.getParent() != null){
-            z.getParent().setRight(b);
+            //z.getParent().setRight(b);
+            
+            if(z.getParent().hasTwoLeaves()){
+                if(z.getData().compareTo(z.getParent().getLeft().getData()) == 0){//ref node is the left of parent
+                    z.getParent().setLeft(b);
+                }else{
+                    z.getParent().setRight(b);
+                }
+            }else if(z.getParent().hasLeft()){
+                z.getParent().setLeft(b);
+            }else{
+                z.getParent().setRight(b);
+            }
+            
+            
             b.setParent(z.getParent());
         }else{
             b.setParent(null);
@@ -229,30 +266,10 @@ public class MyAVLTree extends MyBSTree{
         TreeNode ref = x;
         //test to iterate through paraents
         while(ref.getParent() != null){
-            //D.p(ref.getParent().getData().toString());
-            
-//            if(ref.getParent().hasTwoLeaves()){
-//                if(ref.getData().compareTo(ref.getParent().getLeft().getData()) == 0){//ref node is the left of parent
-//                    if(ref.getHeight() > ref.getParent().getRight().getHeight()){
-//                        ref.getParent().incrementHeight();//height of new node is greater than right, so increment height of parent
-//                    }else{
-//                        break;//break becuase the new node does not effect height of parent
-//                    }
-//                }else{//ref node is the right of parent
-//                    if(ref.getHeight() > ref.getParent().getLeft().getHeight()){
-//                        ref.getParent().incrementHeight();//height of new node is greater than left, so increment height of parent
-//                    }else{
-//                        break;
-//                    }
-//                }
-//            }else{
-//                //only one leaf for node so increment parent
-//                ref.getParent().incrementHeight();
-//            }
             ref.setHeight(max(height(ref.getLeft()), height(ref.getRight())) + 1);
             ref = ref.getParent();
-            
         }
+        ref.setHeight(max(height(ref.getLeft()), height(ref.getRight())) + 1);
     }
     
      // Get Balance factor of node N

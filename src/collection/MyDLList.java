@@ -49,7 +49,6 @@ public class MyDLList extends MySLList{
      */
     @Override
     public void insert(Comparable element){
-        D.p("DDL Insert()");
         addFirst(element);
     }
     
@@ -77,9 +76,9 @@ public class MyDLList extends MySLList{
      */
     private void addBetween(Comparable element, DLListNode predecessor, DLListNode successor) {
         //NTDB REMOVE THIS BLOCK IS DON'T FIGURE OUT WHAT ITS FOR
-        if(head.getNext().getElement() != null){
-            System.out.println(head.getNext().getElement().toString());
-        }
+//        if(head.getNext().getElement() != null){
+//            System.out.println(head.getNext().getElement().toString());
+//        }
         
         DLListNode newest = new DLListNode(element, predecessor, successor);// create and link a new node
         predecessor.setNext(newest);
@@ -104,7 +103,7 @@ public class MyDLList extends MySLList{
      */
     @Override
     public boolean contains(Comparable element){
-        D.p("DDL containts()");
+        //D.p("DDL containts()");
         return get(element) != null;
     }
     
@@ -115,7 +114,7 @@ public class MyDLList extends MySLList{
      */
     @Override
     public Comparable get(Comparable element){
-        D.p("DDL get()");
+        //D.p("DDL get()");
         DLListNode needle = getNode(element);
         if(needle == null){
             return null;
@@ -174,8 +173,8 @@ public class MyDLList extends MySLList{
      */
     @Override
     public Comparable remove(Comparable element){
-         D.p("DDL remove()");
-        D.p("removeing");
+//         D.p("DDL remove()");
+//        D.p("removeing");
         DLListNode delNode = getNode(element);
         if(delNode.getElement() == null){
             return null;
@@ -194,7 +193,7 @@ public class MyDLList extends MySLList{
      */
     @Override
      public String toString(){
-         D.p("getting here");
+         //D.p("getting here");
          String b = "";
          DLListNode ref_ = head.getNext();
          while(ref_.getElement() != null){
@@ -216,7 +215,7 @@ public class MyDLList extends MySLList{
     public Comparable[] toArray() {
         Comparable[] dll_array = new Comparable[getSize()];
         if(getSize() > 0){
-            D.p("Size: " + D.i2s(getSize()));
+            //D.p("Size: " + D.i2s(getSize()));
             ref = head.getNext();
             dll_array[0] = ref.getElement();
             int i = 1;

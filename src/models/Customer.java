@@ -40,7 +40,7 @@ public class Customer implements Comparable {
     }
     
     public void rentVideo(Video video){
-        System.out.println("REnting : " + video.toString());
+        //System.out.println("REnting : " + video.toString());
         rentVideos.insert(video);
     }
     

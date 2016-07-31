@@ -78,7 +78,7 @@ public class Store {
             return true;
         }else{
             //return false if not in stock
-            System.out.println(video.getTitle() + " is not in stock.");//NTDB remove print for final project
+            //System.out.println(video.getTitle() + " is not in stock.");//NTDB remove print for final project
             return false;
         }
     }
@@ -92,7 +92,7 @@ public class Store {
     public boolean checkin(Customer customer, Video video){
         //check if customer is not in list
         if(!contains(customer)){
-            System.out.println("Customer Does not exist. Creating.");//NTDB make unqiue ID
+            //System.out.println("Customer Does not exist. Creating.");//NTDB make unqiue ID
             setCustomerInStore(customer);//add customer
         }
         Customer listCustomer =  (Customer) getCustomers().get(customer);
@@ -103,7 +103,7 @@ public class Store {
             return true;
         }else{
             //customer does not have video
-            System.out.println(listCustomer.getName() + "does not have " + video.getTitle() );
+            //System.out.println(listCustomer.getName() + "does not have " + video.getTitle() );
             return false;
         }
     }

@@ -70,7 +70,7 @@ public class Video implements Comparable {
             Video vid2 = (Video) obj;
             String vid_this = getTitle();
             String vid_that = vid2.getTitle();
-            System.out.println("Compare " +vid_this + " to " +  vid_that);
+            //System.out.println("Compare " +vid_this + " to " +  vid_that);
             return vid_this.compareTo(vid_that);
         }else{
             throw new UnsupportedOperationException("Classes not of same type"); //To change body of generated methods, choose Tools | Templates.

@@ -38,7 +38,7 @@ public class VideoStore {
                         videoStore = new BSTStore();
                         break;
                     case "AVL":
-                        videoStore = new BSTStore();
+                        videoStore = new AVLStore();
                         break; 
                     default:
                         videoStore = new Store();
@@ -69,15 +69,32 @@ public class VideoStore {
                     
                 }else{
                     
-                    String[] video_titles = new String[8];
-                    video_titles[0] = "Fast & Furious";
-                    video_titles[1] = "Xmen";
-                    video_titles[2] = "Deadpool";
-                    video_titles[3] = "Starwars";
-                    video_titles[4] = "Harry Potter";
-                    video_titles[5] = "Zack";
-                    video_titles[6] = "Eeee";
-                    video_titles[7] = "Aaaa";
+                    String[] video_titles = new String[5];
+//                    video_titles[0] = "Danny";
+//                    video_titles[1] = "Fart";
+//                    video_titles[2] = "Owen";
+//                    video_titles[3] = "Zack";
+//                    video_titles[4] = "Yoko";
+
+//                    video_titles[0] = "3";
+//                    video_titles[1] = "2";
+//                    video_titles[2] = "1";
+//                    video_titles[3] = "4";
+//                    video_titles[4] = "5";
+//                    video_titles[5] = "6";
+//                    video_titles[6] = "7";
+//                    video_titles[7] = "16";
+//                    video_titles[8] = "15";
+//                    video_titles[9] = "14";
+                    
+//                    video_titles[0] = "Fast & Furious";
+//                    video_titles[1] = "Xmen";
+//                    video_titles[2] = "Deadpool";
+//                    video_titles[3] = "Starwars";
+//                    video_titles[4] = "Harry Potter";
+//                    video_titles[5] = "Zack";
+//                    video_titles[6] = "Eeee";
+//                    video_titles[7] = "Aaaa";
 
                     String[] customer_names = new String[8];
                     customer_names[0] = "Andrew";
@@ -90,18 +107,18 @@ public class VideoStore {
                     customer_names[7] = "aaaa";
 
 
-                    for(int i=0; i < 8; i++){
+                    for(int i=0; i < video_titles.length; i++){
 //                        Video v = new Video(video_titles[i]);
 //                        videoStore.setVideoInStore(v);
                         vsc.addVideo(video_titles[i]);
 
                         Customer c = new Customer(customer_names[i]);
-                        videoStore.setCustomerInStore(c);
+                        //videoStore.setCustomerInStore(c);
                     }
 
                     
-                    vsc.checkOutVideo("Andrew", "1", "Aaaa");
-                    vsc.checkOutVideo("Stella", "4", "Zack");
+//                    vsc.checkOutVideo("Andrew", "1", "Aaaa");
+//                    vsc.checkOutVideo("Stella", "4", "Zack");
 
                     // create Scanner
                     Scanner KBinput = new Scanner(System.in);

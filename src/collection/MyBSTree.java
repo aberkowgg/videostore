@@ -10,10 +10,8 @@ package collection;
  */
 public class MyBSTree implements MyStructure{
 
-    private TreeNode root;// TreeNode that is the root
-    TreeNode left;// TreeNode to the left of the root
-    TreeNode right;// TreeNode to the right of the root
-    int length;
+    public TreeNode root;// TreeNode that is the root
+    private int length;
 
     //NTBD - CAHGNE GETDATA TO GET DLEMENT FOR NODE
     /**
@@ -27,11 +25,11 @@ public class MyBSTree implements MyStructure{
      * Encapsulate root
      * @return root
      */
-    private TreeNode getRoot(){
+    public TreeNode getRoot(){
         return root;
     }
     
-    private void setRoot(TreeNode node){
+    public void setRoot(TreeNode node){
         root = node;
     }
     
@@ -55,10 +53,12 @@ public class MyBSTree implements MyStructure{
         System.out.println("bst add");
         if (getRoot() == null) {
             setRoot(new TreeNode(element, null, null));
+            incrementSize();
         } else {
+            incrementSize();
             add(getRoot(), element);
         }
-        length++;
+        
     }
 
     /**
@@ -67,19 +67,25 @@ public class MyBSTree implements MyStructure{
      * @param node node that the new node will be the child of
      * @param data data contained in new node
      */
-    private void add(TreeNode node, Comparable element) {
+    protected TreeNode add(TreeNode node, Comparable element) {
         //if comes before in alpha
         if (node.getData().compareTo(element) > 0) {
             if (node.getLeft() == null) {
                 node.setLeft(new TreeNode(element, null, null));
+                //length++;
+                rebalanceInsert(node, node.getLeft());//hook for sublcasses that rebalance
+                return node;//return the parent of inserted node
             } else {
-                add(node.getLeft(), element);
+                return add(node.getLeft(), element);
             }
         } else {
             if (node.getRight() == null) {
                 node.setRight(new TreeNode(element, null, null));
+                //length++;
+                rebalanceInsert(node, node.getRight());//hook for sublcasses that rebalance
+                return node;//return the parent of inserted node
             } else {
-                add(node.getRight(), element);
+                return add(node.getRight(), element);
             }
         }
     }
@@ -149,9 +155,17 @@ public class MyBSTree implements MyStructure{
             return null;
         }else{
             D.p("yay  " + delNode.getData().toString());
-            length--;
+            decremenetSize();
             return delNode.getData();
         }
+    }
+    
+    public void incrementSize(){
+        length++;
+    }
+    
+    public void decremenetSize(){
+        length--;
     }
     
     private TreeNode removeNode(Comparable element) {
@@ -232,18 +246,22 @@ public class MyBSTree implements MyStructure{
             return deleteNode;
     }
     
+    protected void rebalanceInsert(TreeNode parent, TreeNode x){
+        D.p("BST relance.");
+    }
+    
     
 
     /**
      * Prints a string of the tree in pre order
      */
     public Comparable[] preorder() {
-        if (root == null) {
+        if (getRoot() == null) {
             System.out.println("Tree is empty");
             return null;
         } else {
             //System.out.println("Pre order");
-            return preorder(root);
+            return preorder(getRoot());
         }
         
     }
@@ -260,15 +278,17 @@ public class MyBSTree implements MyStructure{
         } else {
             Comparable[] bst_array = new Comparable[1];
             bst_array[0] = node.getData();
-            //s += node.data + ",";
+            
+            D.p(node.data.toString() + "( height : " + node.getHeight() + " )");
             //System.out.println(node.getData().toString() +",");
             //s += preorder(node.left);
             //s += preorder(node.right);
-            Comparable[] bst_array_left = inorder(node.left);
+            
+            Comparable[] bst_array_left = preorder(node.left);
             if(bst_array_left != null)
                 bst_array =  D.concat(bst_array, bst_array_left);
             
-            Comparable[] bst_array_right = inorder(node.right);
+            Comparable[] bst_array_right = preorder(node.right);
             if(bst_array_right != null)
                 bst_array = D.concat(bst_array, bst_array_right);
             return bst_array;
@@ -348,6 +368,7 @@ public class MyBSTree implements MyStructure{
     }
     
     public String[] toStringArray(){
+        D.p("toStringArray() .... Size: " + D.i2s(getSize()));
         String[] bst_s_array = new String[getSize()];
         Comparable[] preorder_arr = preorder();
         for(int i = 0; i < preorder_arr.length; i++){
@@ -382,6 +403,10 @@ class TreeNode {
     TreeNode left;
     // intergar stored in node
     Comparable data;
+    
+    TreeNode parent;
+    
+    int height;
 
     /**
      * Constructor for TreeNode
@@ -394,6 +419,7 @@ class TreeNode {
         this.data = data;
         this.left = left;
         this.right = right;
+        parent = null;
     }
     
     public TreeNode getLeft(){
@@ -404,8 +430,16 @@ class TreeNode {
         return right;
     }
     
+    public TreeNode getParent(){
+        return parent;
+    }
+    
     public Comparable getData(){
         return data;
+    }
+    
+    public int getHeight(){
+        return height;
     }
     
     public void set(Comparable data){
@@ -418,6 +452,14 @@ class TreeNode {
     
     public void setRight(TreeNode node){
         right = node;
+    }
+    
+    public void setParent(TreeNode node){
+        parent = node;
+    }
+    
+    public void setHeight(int h){
+        height = h;
     }
     
     public boolean hasTwoLeaves(){
@@ -434,6 +476,11 @@ class TreeNode {
     
     public boolean hasRight(){
         return right != null;
+    }
+    
+    public int incrementHeight(){
+        height++;
+        return height;
     }
     
     

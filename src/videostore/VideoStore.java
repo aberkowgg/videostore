@@ -8,6 +8,7 @@ package videostore;
 import java.util.Scanner;
 import models.*;
 import java.util.UUID;
+import java.util.Random;
 
 /**
  *
@@ -19,13 +20,13 @@ public class VideoStore {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        D.pArgs(args);
+        D.p(args[0]);
+        double start = (System.currentTimeMillis());
         if(args.length > 0){
             if(args.length == 1 || args.length == 4 ){
-                
                 //switch for data structure
                 Store videoStore;
-                D.p(args[0]);
+                
                 String data_structure = args[0];
                 switch(data_structure){
                     case "SSL":
@@ -38,46 +39,109 @@ public class VideoStore {
                         videoStore = new BSTStore();
                         break;
                     case "AVL":
-                        videoStore = new BSTStore();
+                        videoStore = new AVLStore();
                         break; 
                     default:
                         videoStore = new Store();
                         break;
                 }
-                VideoController vsc = new VideoController(videoStore);
+                
+                //create controller to handle videoStore methods called frequently. 
+                VideoController vsc = new VideoController(videoStore, data_structure);
+                
+                //if 4 paramters, execute autmotion testing to compare run times.
                 if(args.length == 4){
                     
+                    //initilize videos
                     int number_of_videos = D.s2i(args[1]);
                     Video[] video_array = new Video[number_of_videos];
-                    int number_of_customers = D.s2i(args[2]);
-                    Customer[] customer_array = new Customer[number_of_customers];
-                    int number_of_operations = D.s2i(args[1]);
                     
                     for(int i = 0; i < number_of_videos; i++){
                         String video_title = D.randomString();
                         Video v = vsc.addVideo(video_title);
-                        //v = videoStore.setVideoInStore(v);
                         video_array[i] = v;
                     }
                     
+                    //intialize customers
+                    int number_of_customers = D.s2i(args[2]);
+                    Customer[] customer_array = new Customer[number_of_customers];
+                    
                     for(int i = 0; i < number_of_customers; i++){
                         String customer_name = D.randomString();
-                        Customer c = new Customer(customer_name);
-                        c = videoStore.setCustomerInStore(c);
-                        customer_array[i] = c;
+                        customer_array[i] = vsc.addCustomer(customer_name);
                     }
+                    
+                    
+                    //initialize operations
+                    int number_of_operations = D.s2i(args[1]);
+                    String[] operations = new String[number_of_operations];
+                    String[] possible_operations = {"videoInStore", "checkOutVideo", "checkInVideo"};
+                    Random randomGenerator = new Random();
+                    for(int i = 0; i < number_of_operations; i++){
+                        int rand = randomGenerator.nextInt(100);
+                        operations[i] = possible_operations[rand % 3];
+                    }
+                    
+                    //execture operations NTBD - change the array to a queue.
+                    for(int i = 0; i < number_of_operations; i++){
+                        int rand_vid = randomGenerator.nextInt(number_of_videos);
+                        String title = video_array[rand_vid].getTitle();
+                        int rand_cust;
+                        Customer customer;
+                            
+                        D.p(operations[i]);//figure out what step is failing.
+                        switch (operations[i]){
+                            
+                            case "videoInStore":
+                                vsc.videoInStore(title);
+                                break;
+                            case "checkOutVideo":
+                                rand_cust = randomGenerator.nextInt(number_of_customers);
+                                customer = customer_array[rand_cust];
+                                vsc.checkOutVideo(customer.getName(), D.i2s(customer.getId()), title);
+                                break;
+                            case "checkInVideo":
+                                rand_cust = randomGenerator.nextInt(number_of_customers);
+                                customer = customer_array[rand_cust];
+                                vsc.checkInVideo(customer.getName(), D.i2s(customer.getId()), title);
+                                break;
+                            default:
+                                D.p("error, " + operations[i] + " is not a possibile command for automated operations.");
+                        }
+                                
+                    }
+                    
+                    double stop = (System.currentTimeMillis());
+                    D.p("Service Time: " + (stop-start) + " millils");
                     
                 }else{
                     
-                    String[] video_titles = new String[8];
-                    video_titles[0] = "Fast & Furious";
-                    video_titles[1] = "Xmen";
-                    video_titles[2] = "Deadpool";
-                    video_titles[3] = "Starwars";
-                    video_titles[4] = "Harry Potter";
-                    video_titles[5] = "Zack";
-                    video_titles[6] = "Eeee";
-                    video_titles[7] = "Aaaa";
+                    String[] video_titles = new String[18];
+//                    video_titles[0] = "Danny";
+//                    video_titles[1] = "Fart";
+//                    video_titles[2] = "Owen";
+//                    video_titles[3] = "Zack";
+//                    video_titles[4] = "Yoko";
+
+                    video_titles[0] = "3";
+                    video_titles[1] = "2";
+                    video_titles[2] = "1";
+                    video_titles[3] = "4";
+                    video_titles[4] = "5";
+                    video_titles[5] = "6";
+                    video_titles[6] = "7";
+                    video_titles[7] = "96";
+                    video_titles[8] = "95";
+                    video_titles[9] = "94";
+                    
+                    video_titles[10] = "Fast & Furious";
+                    video_titles[11] = "Xmen";
+                    video_titles[12] = "Deadpool";
+                    video_titles[13] = "Starwars";
+                    video_titles[14] = "Harry Potter";
+                    video_titles[15] = "Zack";
+                    video_titles[16] = "Eeee";
+                    video_titles[17] = "Aaaa";
 
                     String[] customer_names = new String[8];
                     customer_names[0] = "Andrew";
@@ -90,18 +154,19 @@ public class VideoStore {
                     customer_names[7] = "aaaa";
 
 
-                    for(int i=0; i < 8; i++){
-//                        Video v = new Video(video_titles[i]);
-//                        videoStore.setVideoInStore(v);
+                    for(int i=0; i < video_titles.length; i++){
                         vsc.addVideo(video_titles[i]);
-
-                        Customer c = new Customer(customer_names[i]);
-                        videoStore.setCustomerInStore(c);
+                    }
+                    
+                    for(int i=0; i < customer_names.length; i++){
+                        vsc.addCustomer(customer_names[i]);
                     }
 
                     
                     vsc.checkOutVideo("Andrew", "1", "Aaaa");
                     vsc.checkOutVideo("Stella", "4", "Zack");
+                    
+                }//this is just for when you want to access the operaitons while test
 
                     // create Scanner
                     Scanner KBinput = new Scanner(System.in);
@@ -136,41 +201,41 @@ public class VideoStore {
 
                         switch (choice) {//Method Calls
                             case "1":
-                                System.out.println("Please enter the title and id of video");
-                                System.out.println("Title: ");
+                                D.p("Please enter the title and id of video");
+                                D.p("Title: ");
                                 String video_title = KBinput.nextLine();
                                 vsc.addVideo(video_title);
                                 break;
                             case "2":
-                                System.out.println("Please enter the title and id of video you wish to delete.");
-                                System.out.println("Title: ");
+                                D.p("Please enter the title and id of video you wish to delete.");
+                                D.p("Title: ");
                                 String video_title_d = KBinput.nextLine();
-                                Video vDelete = new Video(video_title_d);
-                                videoStore.removeVideoInStore(vDelete);
+                                vsc.removeVideo(video_title_d);
                                 break;
                             case "3":
-                                System.out.println("Please enter customer name");
-                                System.out.println("Name: ");
+                                D.p("Please enter customer name");
+                                D.p("Name: ");
                                 String customer_name = KBinput.nextLine();
-                                Customer c = new Customer(customer_name);
-                                videoStore.setCustomerInStore(c);
+                                vsc.addCustomer(customer_name);
                                 break;
                             case "4":
-                                System.out.println("Please enter the name and id of the customer you wish to delete.");
-                                System.out.println("Name: ");
+                                D.p("Please enter the name and id of the customer you wish to delete.");
+                                D.p("Name: ");
                                 String customer_name_d = KBinput.nextLine();
-                                System.out.println("Id: ");
+                                D.p("Id: ");
                                 String custome_id_d = KBinput.nextLine();
-                                Customer cDelete = new Customer(customer_name_d, D.s2i(custome_id_d));
-                                videoStore.removeCustomerInStore(cDelete);
+                                if(D.isInteger(custome_id_d)){
+                                    vsc.removeCustomer(customer_name_d, custome_id_d);
+                                }else{
+                                    D.p(custome_id_d + "is not an integer. Please retener valid ID.");
+                                }
+                                
                                 break;
                             case "5":
-                                videoStore.printInStoreVideos();
-                                System.out.println("Please enter the title and id of video");
-                                System.out.println("Title: ");
+                                D.p("Please enter the title and id of video");
+                                D.p("Title: ");
                                 String video_search_title = KBinput.nextLine();
-                                Video searchVideo = new Video(video_search_title);
-                                boolean video_exists = videoStore.contains(searchVideo);
+                                boolean video_exists = vsc.videoInStore(video_search_title);
                                 D.p(Boolean.toString(video_exists));//NTDB  - formet the print a little nicer
 
                                 break;
@@ -183,9 +248,13 @@ public class VideoStore {
                                 D.p("Please enter the title of the video you wish to checkout.");
                                 D.p("Title: ");
                                 String video_title_co = KBinput.nextLine();
-                                boolean checked_out_successfully = vsc.checkOutVideo(customer_name_co, custome_id_co, video_title_co);
-                                D.p(Boolean.toString(checked_out_successfully));
-
+                                if(D.isInteger(custome_id_co)){
+                                    boolean checked_out_successfully = vsc.checkOutVideo(customer_name_co, custome_id_co, video_title_co);
+                                    D.p(Boolean.toString(checked_out_successfully));
+                                }else{
+                                    D.p(custome_id_co + "is not an integer. Please retener valid ID.");
+                                }
+                                
                                 break;
                             case "7":
                                 D.p("Please enter the name and id of the customer you wish checkin.");
@@ -196,8 +265,12 @@ public class VideoStore {
                                 D.p("Please enter the title of the video you wish to checkin.");
                                 D.p("Title: ");
                                 String video_title_ci = KBinput.nextLine();
-                                boolean checked_in_successfully = vsc.checkInVideo(customer_name_ci, custome_id_ci, video_title_ci);  //videoStore.checkin(cCheckin, vCheckIn);
-                                D.p(Boolean.toString(checked_in_successfully));
+                                if(D.isInteger(custome_id_ci)){
+                                    boolean checked_in_successfully = vsc.checkInVideo(customer_name_ci, custome_id_ci, video_title_ci);  //videoStore.checkin(cCheckin, vCheckIn);
+                                    D.p(Boolean.toString(checked_in_successfully));
+                                }else{
+                                    D.p(custome_id_ci + "is not an integer. Please retener valid ID.");
+                                }
                                 break;
                             case "8":
                                 videoStore.printInStoreCustomers();
@@ -218,9 +291,13 @@ public class VideoStore {
                                 String customer_name_vids = KBinput.nextLine();//System.out.println(video_title);
                                 System.out.println("Id: ");
                                 String custome_id_vids = KBinput.nextLine();//System.out.println(video_id);
-                                Customer cVideosCheckedOut = new Customer(customer_name_vids, D.s2i(custome_id_vids));
+                                if(D.isInteger(custome_id_vids)){
+                                    Customer cVideosCheckedOut = new Customer(customer_name_vids, D.s2i(custome_id_vids), data_structure);
 
-                                videoStore.printCustomersVideos(cVideosCheckedOut);
+                                    videoStore.printCustomersVideos(cVideosCheckedOut);
+                                }else{
+                                    D.p(custome_id_vids + " is not an integer. Please retener valid ID.");
+                                }
 
                                 break;
                             case "13":
@@ -238,7 +315,7 @@ public class VideoStore {
                         again = KBinput.nextLine();
 
                     } while (again != "X" && again != "x");
-                }
+                //}//end if if args == 1, un comment
             }else{
                 D.p("Arguments are not in correct format");
             }
@@ -248,12 +325,18 @@ public class VideoStore {
     
 }
 
+/**
+ * Class to control any functionality called more than once in main
+ * @author andrewberkow
+ */
 class VideoController {
     
     public Store videoStore;
+    public String data_structure;
     
-    public VideoController(Store store){
+    public VideoController(Store store, String data_structure){
         this.videoStore = store;
+        this.data_structure = data_structure;
     }
     
     public Video addVideo(String video_title ){
@@ -262,15 +345,36 @@ class VideoController {
         return v;
     }
     
+    public void removeVideo(String video_title ){
+        Video vDelete = new Video(video_title);
+        videoStore.removeVideoInStore(vDelete);
+    }
+    
+    public Customer addCustomer(String name){
+        Customer c = new Customer(name, data_structure);
+        return videoStore.setCustomerInStore(c);
+    }
+    
+    public void removeCustomer(String name,String id){
+        Customer cDelete = new Customer(name, D.s2i(id), data_structure);
+        videoStore.removeCustomerInStore(cDelete);
+    }
+    
+    public boolean videoInStore(String video_title ){
+        Video searchVideo = new Video(video_title);
+        boolean video_exists = videoStore.contains(searchVideo);
+        return video_exists;
+    }
+    
     public boolean checkOutVideo(String customer_name, String custome_id, String video_title){
-        Customer cCheckout = new Customer(customer_name, D.s2i(custome_id));
+        Customer cCheckout = new Customer(customer_name, D.s2i(custome_id), data_structure);
         Video vCheckOut = new Video(video_title);
         boolean checked_out_successfully = videoStore.checkout(cCheckout, vCheckOut);
         return checked_out_successfully;
     }
     
     public boolean checkInVideo(String customer_name, String custome_id, String video_title){
-        Customer cCheckin = new Customer(customer_name, D.s2i(custome_id));
+        Customer cCheckin = new Customer(customer_name, D.s2i(custome_id), data_structure);
         Video vCheckIn = new Video(video_title);
         return videoStore.checkin(cCheckin, vCheckIn);
     }
@@ -323,5 +427,15 @@ class D {
     public static String randomString(){
         String uuid = UUID.randomUUID().toString();
         return uuid.replace("-", "");
+    }
+    
+    public static boolean isInteger( String input ) {
+        try {
+            Integer.parseInt( input );
+            return true;
+        }
+        catch( Exception e ) {
+            return false;
+        }
     }
 }

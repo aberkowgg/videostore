@@ -258,7 +258,7 @@ public class MyAVLTree extends MyBSTree{
         //update heights
         a.height = max(height(a.getLeft()), height(a.getRight())) + 1;
         c.height = max(height(c.getLeft()), height(c.getRight())) + 1;
-        b.height = max(height(c.getLeft()), height(b.getRight())) + 1;
+        //b.height = max(height(c.getLeft()), height(b.getRight())) + 1;
         remeasureInsert(b);
     }
     

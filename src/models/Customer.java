@@ -5,7 +5,7 @@
  */
 package models;
 
-import collection.MySLList;
+import collection.*;
 import java.util.Objects;
 
 /**
@@ -15,16 +15,22 @@ import java.util.Objects;
 public class Customer implements Comparable {
     private String name;
     public int id;
-    public MySLList rentVideos = new MySLList();
+    public MyStructure rentVideosSLL = new MySLList();
+    public MyStructure rentVideosDLL = new MyDLList();
+    public MyStructure rentVideosBST = new MyBSTree();
+    public MyStructure rentVideosAVL = new MyAVLTree();
+    public String structure = "SLL";
     
-    public Customer(String name, int id){
+    public Customer(String name, int id, String structure){
         this.name = name;
         this.id = id;
+        this.structure = structure;
     }
     
-    public Customer(String name){
+    public Customer(String name, String structure){
         this.name = name;
         this.id = 0;
+        this.structure = structure;
     }
     
     public String getName(){
@@ -41,20 +47,43 @@ public class Customer implements Comparable {
     
     public void rentVideo(Video video){
         //System.out.println("REnting : " + video.toString());
-        rentVideos.insert(video);
+        getVideos().insert(video);
     }
     
     public Video checkInVideo(Video video){
-        return (Video) rentVideos.remove(video);
+        return (Video) getVideos().remove(video);
     }
     
-    public MySLList getVideos(){
-        return rentVideos;
+    public MyStructure getVideos(){
+        MyStructure data_struct;
+        switch(structure){
+            case "SLL":
+                data_struct =  rentVideosSLL;
+                //System.out.println("SLL");
+                break;
+            case "DLL":
+                data_struct = rentVideosDLL;
+                //System.out.println("DLL");
+                break;
+            case "BST":
+                data_struct = rentVideosBST;
+                //System.out.println("BST");
+                break;
+            case "AVL":
+                data_struct = rentVideosAVL;
+                //System.out.println("AVL");
+                break; 
+            default:
+                data_struct = rentVideosSLL;
+                //System.out.println("default");
+                break;
+        }
+        return data_struct;
     }
     
     @Override
     public String toString(){
-        return id + ": " + name + " , Videos: " + rentVideos.toString();
+        return id + ": " + name + " , Videos: " + getVideos().toString();
     }
     
     @Override

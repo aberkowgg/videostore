@@ -47,7 +47,7 @@ public class VideoStore {
                 }
                 
                 //create controller to handle videoStore methods called frequently. 
-                VideoController vsc = new VideoController(videoStore);
+                VideoController vsc = new VideoController(videoStore, data_structure);
                 
                 //if 4 paramters, execute autmotion testing to compare run times.
                 if(args.length == 4){
@@ -161,9 +161,29 @@ public class VideoStore {
                         vsc.addCustomer(customer_names[i]);
                     }
 
-                    
-                    vsc.checkOutVideo("Andrew", "1", "Aaaa");
+                    videoStore.printInStoreCustomers();
+                    videoStore.printAllVideos();
+                    vsc.checkOutVideo("Andrew", "1", "Deadpool");
                     vsc.checkOutVideo("Stella", "4", "Zack");
+                    vsc.checkOutVideo("Andrew", "1", "Aaaa");
+                    D.p("aftr Aaaa");
+                    vsc.checkOutVideo("Andrew", "1", "Fast & Furious");
+                    D.p("aftr Fast & Furious");
+                    vsc.printCustomersVideos("Andrew", "1");
+                    
+                    vsc.printCustomersVideos("Andrew", "1");
+                    vsc.checkOutVideo("Andrew", "1", "Harry Potter");
+                    vsc.printCustomersVideos("Andrew", "1");
+                    vsc.checkInVideo("Andrew", "1", "Harry Potter");
+                    vsc.printCustomersVideos("Andrew", "1");
+                    vsc.removeCustomer("Perons", "3");
+                    videoStore.printInStoreCustomers();
+                    videoStore.printAllVideos();
+                    videoStore.printInStoreVideos();
+                    String checked_out_videos = videoStore.getCheckedOutVideosString();
+                    D.p(checked_out_videos);
+                    vsc.printCustomersVideos("Andrew", "1");
+                    
                     
                 }//this is just for when you want to access the operaitons while test
 
@@ -285,19 +305,12 @@ public class VideoStore {
                                 D.p(checked_out_videos);
                                 break;
                             case "12":
-                                System.out.println("Please enter the name and id of the customer you wish to see current checkedout vidoes.");
-                                System.out.println("Name: ");
-                                String customer_name_vids = KBinput.nextLine();//System.out.println(video_title);
-                                System.out.println("Id: ");
-                                String custome_id_vids = KBinput.nextLine();//System.out.println(video_id);
-                                if(D.isInteger(custome_id_vids)){
-                                    Customer cVideosCheckedOut = new Customer(customer_name_vids, D.s2i(custome_id_vids));
-
-                                    videoStore.printCustomersVideos(cVideosCheckedOut);
-                                }else{
-                                    D.p(custome_id_vids + " is not an integer. Please retener valid ID.");
-                                }
-
+                                D.p("Please enter the name and id of the customer you wish to see current checkedout vidoes.");
+                                D.p("Name: ");
+                                String customer_name_vids = KBinput.nextLine();
+                                D.p("Id: ");
+                                String custome_id_vids = KBinput.nextLine();
+                                vsc.printCustomersVideos(customer_name_vids, custome_id_vids);
                                 break;
                             case "13":
                                 D.p("Goodbye.");
@@ -331,9 +344,11 @@ public class VideoStore {
 class VideoController {
     
     public Store videoStore;
+    public String data_structure;
     
-    public VideoController(Store store){
+    public VideoController(Store store, String data_structure){
         this.videoStore = store;
+        this.data_structure = data_structure;
     }
     
     public Video addVideo(String video_title ){
@@ -348,12 +363,12 @@ class VideoController {
     }
     
     public Customer addCustomer(String name){
-        Customer c = new Customer(name);
+        Customer c = new Customer(name, data_structure);
         return videoStore.setCustomerInStore(c);
     }
     
     public void removeCustomer(String name,String id){
-        Customer cDelete = new Customer(name, D.s2i(id));
+        Customer cDelete = new Customer(name, D.s2i(id), data_structure);
         videoStore.removeCustomerInStore(cDelete);
     }
     
@@ -364,17 +379,28 @@ class VideoController {
     }
     
     public boolean checkOutVideo(String customer_name, String custome_id, String video_title){
-        Customer cCheckout = new Customer(customer_name, D.s2i(custome_id));
+        Customer cCheckout = new Customer(customer_name, D.s2i(custome_id), data_structure);
         Video vCheckOut = new Video(video_title);
         boolean checked_out_successfully = videoStore.checkout(cCheckout, vCheckOut);
         return checked_out_successfully;
     }
     
     public boolean checkInVideo(String customer_name, String custome_id, String video_title){
-        Customer cCheckin = new Customer(customer_name, D.s2i(custome_id));
+        Customer cCheckin = new Customer(customer_name, D.s2i(custome_id), data_structure);
         Video vCheckIn = new Video(video_title);
         return videoStore.checkin(cCheckin, vCheckIn);
     }
+    
+    public void printCustomersVideos(String customer_name, String customer_id){
+        if(D.isInteger(customer_id)){
+            Customer cVideosCheckedOut = new Customer(customer_name, D.s2i(customer_id),data_structure);
+            videoStore.printCustomersVideos(cVideosCheckedOut);
+        }else{
+            D.p(customer_id + " is not an integer. Please retener valid ID.");
+        }
+    }
+    
+                                
     
 }
 

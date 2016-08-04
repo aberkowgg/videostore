@@ -187,7 +187,8 @@ public class MyBSTree implements MyStructure{
             if(node.getLeft() != null){//failover to make sure there is something in left node
                 if(element.compareTo(node.getLeft().getData()) == 0){
                     //D.p("?");
-                    TreeNode removedNode = node.getLeft();
+                    //TreeNode removedNode = node.getLeft();
+                    TreeNode removedNode = new TreeNode(node.getLeft().getData(), null, null);
                     node.setLeft(removeAndShift(node.getLeft()));
                     rebalanceRemove(node, node.getLeft());
                     return removedNode;
@@ -200,7 +201,8 @@ public class MyBSTree implements MyStructure{
             //D.p("2222?");
             if(node.getRight() != null){//failover to make sure there is something in left node
                 if(element.compareTo(node.getRight().getData()) == 0){
-                    TreeNode removedNode = node.getRight();
+                    //TreeNode removedNode = node.getRight();
+                    TreeNode removedNode = new TreeNode(node.getRight().getData(), null, null);//create a node to reutrn with data of removed node.
                    // D.p("333?");
                     node.setRight(removeAndShift(node.getRight()));
                     rebalanceRemove(node, node.getRight());
@@ -270,7 +272,7 @@ public class MyBSTree implements MyStructure{
      */
     public Comparable[] preorder() {
         if (getRoot() == null) {
-            System.out.println("Tree is empty");
+            //System.out.println("Tree is empty");
             return null;
         } else {
             //System.out.println("Pre order");
@@ -314,7 +316,7 @@ public class MyBSTree implements MyStructure{
      */
     public Comparable[] inorder() {
         if (root == null) {
-            System.out.println("Tree is empty");
+            //System.out.println("Tree is empty");
             return null;
         } else {
             //System.out.println("In order");
@@ -352,7 +354,7 @@ public class MyBSTree implements MyStructure{
      */
     public void postorder() {
         if (root == null) {
-            System.out.println("Tree is empty");
+            //System.out.println("Tree is empty");
         } else {
             postorder(root);
         }
@@ -385,15 +387,17 @@ public class MyBSTree implements MyStructure{
         //D.p("toStringArray() .... Size: " + D.i2s(getSize()));
         String[] bst_s_array = new String[getSize()];
         Comparable[] preorder_arr = preorder();
-        for(int i = 0; i < preorder_arr.length; i++){
-            bst_s_array[i] = preorder_arr[i].toString();
-        }
+        if(getSize() > 0)
+            for(int i = 0; i < preorder_arr.length; i++){
+                bst_s_array[i] = preorder_arr[i].toString();
+            }
         return bst_s_array;
     }
 
     @Override
     public Comparable[] toArray() {
-        Comparable[] bst_array = inorder();
+        //D.p( "toArray()");
+        Comparable[] bst_array = preorder();
 //        System.out.println("print in order array");
 //        for(int i = 0; i < bst_array.length; i++){
 //            System.out.println(bst_array[i].toString());

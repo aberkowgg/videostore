@@ -50,8 +50,8 @@ public class VideoStore {
                 VideoController vsc = new VideoController(videoStore, data_structure);
                 
                 //if 4 paramters, execute autmotion testing to compare run times.
-                if(args.length == 4){
-                    
+                if(args.length == 4 ){
+                    //D.isInteger(args[1]) && D.isInteger(args[2]) && D.isInteger(args[3])
                     //initilize videos
                     int number_of_videos = D.s2i(args[1]);
                     Video[] video_array = new Video[number_of_videos];
@@ -185,7 +185,7 @@ public class VideoStore {
                     vsc.printCustomersVideos("Andrew", "1");
                     
                     
-                }//this is just for when you want to access the operaitons while test
+                //}//this is just for when you want to access the operaitons while test
 
                     // create Scanner
                     Scanner KBinput = new Scanner(System.in);
@@ -301,8 +301,8 @@ public class VideoStore {
                                 videoStore.printInStoreVideos();
                                 break;
                             case "11":
-                                String checked_out_videos = videoStore.getCheckedOutVideosString();
-                                D.p(checked_out_videos);
+                                String checked_out_videos_11 = videoStore.getCheckedOutVideosString();
+                                D.p(checked_out_videos_11);
                                 break;
                             case "12":
                                 D.p("Please enter the name and id of the customer you wish to see current checkedout vidoes.");
@@ -317,8 +317,6 @@ public class VideoStore {
                                 again = "X";
                                 break;
                                 
-
-
                             default:
                                 System.out.println("That is not a choice!");
                                 break;
@@ -326,8 +324,8 @@ public class VideoStore {
                         System.out.println("Would you like to play again? X to exit any other key to continue");
                         again = KBinput.nextLine();
 
-                    } while (again != "X" && again != "x");
-                //}//end if if args == 1, un comment
+                    } while (!"X".equals(again) && !"x".equals(again));
+                }//end if if args == 1, un comment
             }else{
                 D.p("Arguments are not in correct format");
             }

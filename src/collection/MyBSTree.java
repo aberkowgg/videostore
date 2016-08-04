@@ -45,12 +45,11 @@ public class MyBSTree implements MyStructure{
     /**
      * Add new node to tree. If tree is empty, root == data. 
      * Else call add(node, data)
-     * 
-     * @param data data contained by new node
+     *
+     * @param element data contained by new node
      */
     @Override
     public void insert(Comparable element) {
-        //System.out.println("bst add");
         if (getRoot() == null) {
             setRoot(new TreeNode(element, null, null));
             incrementSize();
@@ -58,7 +57,6 @@ public class MyBSTree implements MyStructure{
             incrementSize();
             add(getRoot(), element);
         }
-        
     }
 
     /**
@@ -72,7 +70,6 @@ public class MyBSTree implements MyStructure{
         if (node.getData().compareTo(element) > 0) {
             if (node.getLeft() == null) {
                 node.setLeft(new TreeNode(element, null, null));
-                //length++;
                 rebalanceInsert(node, node.getLeft());//hook for sublcasses that rebalance
                 return node;//return the parent of inserted node
             } else {
@@ -81,7 +78,6 @@ public class MyBSTree implements MyStructure{
         } else {
             if (node.getRight() == null) {
                 node.setRight(new TreeNode(element, null, null));
-                //length++;
                 rebalanceInsert(node, node.getRight());//hook for sublcasses that rebalance
                 return node;//return the parent of inserted node
             } else {
@@ -113,7 +109,6 @@ public class MyBSTree implements MyStructure{
             return false;
         } else if (element.compareTo(node.getData()) == 0){
             return true;
-            //node.getData().compareTo(data) > 0
         } else if (element.compareTo(node.getData()) < 0) {
             return contains(node.getLeft(), element);
         } else {
@@ -121,6 +116,11 @@ public class MyBSTree implements MyStructure{
         }
     }
     
+    /**
+     * Get the element from BST
+     * @param element
+     * @return Object
+     */
     @Override
     public Object get(Comparable element) {
         TreeNode node = getNode(element);
@@ -130,16 +130,26 @@ public class MyBSTree implements MyStructure{
         return node.getData();
     }
     
+    /**
+     * Get node containing element from BST
+     * @param element
+     * @return TreeNode
+     */
     private TreeNode getNode(Comparable element) {
         return get(getRoot(), element);
     }
 
+    /**
+     * Recursive statement to search for node that matches element
+     * @param node
+     * @param element
+     * @return TreeNode
+     */
     private TreeNode get(TreeNode node, Comparable element) {
         if (node == null) {
-            D.p("root empty");
-            return null;
+            return null;//node is empty
         } else if (element.compareTo(node.getData()) == 0){
-            return node;
+            return node;//match
         } else if (element.compareTo(node.getData()) < 0) {
             return get(node.left, element);
         } else {
@@ -147,63 +157,73 @@ public class MyBSTree implements MyStructure{
         }
     }
     
+    /**
+     * remove element from BST
+     * @param element
+     * @return Comparable element that was removed
+     */
     @Override
     public Comparable remove(Comparable element){
         decremenetSize();
         TreeNode delNode = removeNode(element);
         if(delNode == null){
-            D.p("doesnt exist");
             return null;
         }else{
             return delNode.getData();
         }
     }
     
-    public void incrementSize(){
-        length++;
-    }
-    
-    public void decremenetSize(){
-        length--;
-    }
-    
+    /**
+     * Remove node from BST
+     * @param element
+     * @return TreeNode copy of node that was removed
+     */
     private TreeNode removeNode(Comparable element) {
         //if the root node is the delete node
         if(element.compareTo(getRoot().getData()) == 0){
-              setRoot(removeAndShift(getRoot()));
-              return getRoot();
+            TreeNode removedNode = new TreeNode(getRoot().getData(), null, null);
+            //set root to the node that was shifted up after deletion
+            setRoot(removeAndShift(getRoot()));
+            //return the new route
+            return removedNode;
         }
         return remove(getRoot(), element);
     }
 
+    /**
+     * Recursive statement that finds node to delete and returns copy of deleted node.
+     * @param node
+     * @param element
+     * @return TreeNode node containing data of removed node
+     */
     private TreeNode remove(TreeNode node, Comparable element) {
         if (node == null) {
-            D.p("node doesn't exist");
+            //node is leaf child of leaf, return nothing
             return null;
         } 
         
-        if (element.compareTo(node.getData()) < 0) {
-            //D.p("111?");
+        //check if element lives on left or right of node
+        if (element.compareTo(node.getData()) < 0) {//go left
             if(node.getLeft() != null){//failover to make sure there is something in left node
                 if(element.compareTo(node.getLeft().getData()) == 0){
-                    //D.p("?");
-                    //TreeNode removedNode = node.getLeft();
+                    //left is the node we are looking for
+                    //create a node node to hold the data of node we are about to delte
                     TreeNode removedNode = new TreeNode(node.getLeft().getData(), null, null);
+                    //call remove and shift to remove the node and set the new node that took the deleted nodes place to left
                     node.setLeft(removeAndShift(node.getLeft()));
+                    //rebalance hook to rebalance tree for subclass that balance tree
                     rebalanceRemove(node, node.getLeft());
+                    //return the node we deleted
                     return removedNode;
                 }
-                return remove(node.getLeft(), element);
+                return remove(node.getLeft(), element);//keep moving down tree
             }else{
-                return null;
+                return null;//node does not exist
             }
-        } else {
-            //D.p("2222?");
+        } else {//go right
             if(node.getRight() != null){//failover to make sure there is something in left node
                 if(element.compareTo(node.getRight().getData()) == 0){
-                    //TreeNode removedNode = node.getRight();
                     TreeNode removedNode = new TreeNode(node.getRight().getData(), null, null);//create a node to reutrn with data of removed node.
-                   // D.p("333?");
                     node.setRight(removeAndShift(node.getRight()));
                     rebalanceRemove(node, node.getRight());
                     return removedNode;
@@ -213,45 +233,55 @@ public class MyBSTree implements MyStructure{
                 return null;
             }
         }
-
     }
     
+    /**
+     * Preform deletion of node and return the node that will takes its place
+     * @param deleteNode
+     * @return TreeNode the node that takes place of removed node
+     */
     private TreeNode removeAndShift(TreeNode deleteNode){
-            //D.p("removeAndShift");
             //if has two child notes
             TreeNode ref_right = deleteNode.getRight();
             TreeNode ref_left = deleteNode.getLeft();
-            //if node has two levaes
+            //check if node has two leaves, one leaf or is leaf 
             if(deleteNode.hasTwoLeaves()){
-                //D.p("deleteNode.hasTwoLeaves");
-                if(ref_right.getLeft() == null){//if right node has no left node
-                    //D.p("qqqqq");
-                    TreeNode dRoot = deleteNode;
+                //has two leafs
+                if(ref_right.getLeft() == null){
+                    //if right node has no left node. in this the right leaf will be the 
                     deleteNode = ref_right;
                     deleteNode.setLeft(ref_left);
                 }else{
-                    //D.p("wwwwww");
+                    //node to the right of the deleted node has left children
                     TreeNode w = ref_right;
+                    //set w to the leftmost child that also has a left node
                     while(w.getLeft().getLeft() != null){
                         w = w.getLeft();
                     }
-                    Comparable wData = w.getLeft().getData();//data 
+                    
+                    deleteNode.setParent(w);//set the parent of the delete node to the same parent that would replace it so we can refernce this in rebalance. This is not optimal but was required for fix bug in AVL
+                    //get the data of the mode that will replace deleted node 
+                    Comparable wData = w.getLeft().getData();
+                    //check if the node that will be moved to deleted nodes spot has children
                     if(w.getLeft().isExteranlNode()){
+                        //no children
                         w.setLeft(null);//set w's left to null
                     }else{
+                        //has children (must be right since this is left most)
+                        //set the left of w to the node that will replace the removed node's right child
                         w.setLeft(w.getLeft().getRight());
                     }
                     deleteNode.set(wData);//set data from removed node to root
                 }
                 
             }else if(deleteNode.hasLeft()){
-                //D.p("has left");
+                //if only left node just move left node one step up
                 deleteNode = deleteNode.getLeft();
             }else if(deleteNode.hasRight()){
-                //D.p("has right");
+                //if only right node just move right node one step up
                 deleteNode = deleteNode.getRight();
             }else{
-                //D.p("has neither");
+                //has no nodes so do nothing
                 return null;
             }
             return deleteNode;
@@ -265,27 +295,38 @@ public class MyBSTree implements MyStructure{
         
     }
     
+    /**
+     * Increments size of BST
+     */
+    public void incrementSize(){
+        length++;
+    }
     
+    /**
+     * Increments size of BST
+     */
+    public void decremenetSize(){
+        length--;
+    }
 
     /**
-     * Prints a string of the tree in pre order
+     * Returns tree as a pre ordered array
+     * @return Comparable[] pre ordered array of comparable objects
      */
     public Comparable[] preorder() {
         if (getRoot() == null) {
-            //System.out.println("Tree is empty");
             return null;
         } else {
-            //System.out.println("Pre order");
             return preorder(getRoot());
         }
         
     }
 
     /**
-     * Recursive statement to generate pre order string
-     * 
+     * Recursive statement to generate pre order array
      * @param node node you are printing (if it has data) and the node that the
      * children of will be called recursed
+     * @return Comparable[]
      */
     private Comparable[] preorder(TreeNode node) {
         if (node == null) {
@@ -312,14 +353,13 @@ public class MyBSTree implements MyStructure{
     }
 
     /**
-     * prints the tree in order traversal
+     * Returns an in order array of BEST
+     * @return Comparable[]
      */
     public Comparable[] inorder() {
         if (root == null) {
-            //System.out.println("Tree is empty");
             return null;
         } else {
-            //System.out.println("In order");
             return inorder(root);
         }
     }
@@ -327,8 +367,8 @@ public class MyBSTree implements MyStructure{
     /**
      * Recursive statement called by inorder()
      * 
-     * @param node node you recursivly call the left child of, print than
-     * recrusivly call the right child of
+     * @param node node you recursivly call the left child of, print than recrusivly call the right child of
+     * @return Comparable[]
      */
     private Comparable[] inorder(TreeNode node) {
         if (node == null) {
@@ -340,51 +380,29 @@ public class MyBSTree implements MyStructure{
             Comparable[] bst_array_left = inorder(node.left);
             if(bst_array_left != null)
                 bst_array =  D.concat(bst_array_left, bst_array);
-            
-            //System.out.println(node.getData().toString() +",");
-            
+           
             Comparable[] bst_array_right = inorder(node.right);
             if(bst_array_right != null)
                 bst_array = D.concat(bst_array, bst_array_right);
            return bst_array;
         }
     }
-    /**
-     * Prints the tree postorder traversal
-     */
-    public void postorder() {
-        if (root == null) {
-            //System.out.println("Tree is empty");
-        } else {
-            postorder(root);
-        }
-    }
-
-    /**
-     * Recursive statement called by postorder()
-     * 
-     * @param node node you recursivly call the left child of, 
-     * recrusivly call the right child of than print the data
-     */
-    private void postorder(TreeNode node) {
-        if (node == null) {
-            return;
-        } else {
-            postorder(node.left);
-            postorder(node.right);
-            System.out.print(node.data + ",");
-        }
-    }
       
+    /**
+     * Returns comma split list of tree
+     * @return String
+     */
     @Override
     public String toString(){
-        //toArray();
         String s = String.join(",", toStringArray());
         return s;
     }
     
+    /**
+     * Returns array of tree with each node as a string
+     * @return String[]
+     */
     public String[] toStringArray(){
-        //D.p("toStringArray() .... Size: " + D.i2s(getSize()));
         String[] bst_s_array = new String[getSize()];
         Comparable[] preorder_arr = preorder();
         if(getSize() > 0)
@@ -393,24 +411,22 @@ public class MyBSTree implements MyStructure{
             }
         return bst_s_array;
     }
-
+    
+    /**
+     * Returns tree as array of Comparable elements
+     * @return Comparable[]
+     */
     @Override
     public Comparable[] toArray() {
-        //D.p( "toArray()");
         Comparable[] bst_array = preorder();
-//        System.out.println("print in order array");
-//        for(int i = 0; i < bst_array.length; i++){
-//            System.out.println(bst_array[i].toString());
-//        }
         return bst_array;
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
 
 /**
  * TreeNode that MyBSTree uses to store data and link to other nodes.
- * Three fields: TreeNode right, TreeNOde left and int data.
+ * Three fields: TreeNode right, TreeNOde left and comparable element as data.
  * 
  * @author AndrewBerkow
  */

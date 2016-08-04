@@ -33,7 +33,8 @@ public class MyAVLTree extends MyBSTree{
     @Override
     public void setRoot(TreeNode node){
         root = node;
-        root.setParent(null);
+        if(root != null)//makes sure root is a node. 
+            root.setParent(null);
     }
     
     @Override
@@ -95,9 +96,17 @@ public class MyAVLTree extends MyBSTree{
         TreeNode ref;
         //parent of deleted node
         if(newChild != null){
-            newChild.setParent(parent);
-            ref = newChild;
+            ref = newChild.getParent();//get the old parent of the new child, this is where will we start searching for rebalanced nodes from.
+            newChild.setParent(parent);//set new parent
+            //need to set the parent relationship of the new child to both of its children
+            if(newChild.hasLeft())
+                newChild.getLeft().setParent(newChild);
+            if(newChild.hasRight())
+                newChild.getRight().setParent(newChild);
+            //ref = newChild;
+            //#AB - right here is the problem, we are searching for node to balance form new position instead of the spot the node was ramoved from
         }else{
+            //TreeNode oldParentOfnewChild = parent;
             ref = parent;
         }
         

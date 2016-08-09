@@ -426,7 +426,7 @@ public class MyBSTree implements MyStructure{
 
 /**
  * TreeNode that MyBSTree uses to store data and link to other nodes.
- * Three fields: TreeNode right, TreeNOde left and comparable element as data.
+ * Four fields: TreeNode right, TreeNOde left, TreeNOde Parent and comparable element as data.
  * 
  * @author AndrewBerkow
  */

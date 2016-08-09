@@ -38,6 +38,4 @@ public class SLListNode {
             this.next = next;
         }
         
-        
-    
 }

@@ -116,12 +116,6 @@ public class VideoStore {
                 }else{
                     
                     String[] video_titles = new String[18];
-//                    video_titles[0] = "Danny";
-//                    video_titles[1] = "Fart";
-//                    video_titles[2] = "Owen";
-//                    video_titles[3] = "Zack";
-//                    video_titles[4] = "Yoko";
-
                     video_titles[0] = "3";
                     video_titles[1] = "2";
                     video_titles[2] = "1";

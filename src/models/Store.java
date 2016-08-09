@@ -189,7 +189,6 @@ public class Store {
      */
     public String getCheckedOutVideosString(){
         
-        System.out.println("getting here");
         String video_string = "";
         Comparable[] customer_array = getCustomers().toArray();
         int num_of_customers = customer_array.length;
